@@ -6,11 +6,23 @@ class SimpleAPI {
         this.cache = new Map(); // 简单缓存
         this.cacheTimeout = 5 * 60 * 1000; // 5分钟缓存
         this.useRealData = true; // 使用真实数据
-        this.proxyUrl = 'http://localhost:3001'; // 代理服务器地址
+        // 自动检测代理服务器地址
+        this.proxyUrl = this.getProxyUrl();
 
         console.log('SimpleAPI 初始化完成');
         console.log('使用真实数据:', this.useRealData);
         console.log('代理服务器:', this.proxyUrl);
+    }
+
+    // 自动检测代理服务器地址
+    getProxyUrl() {
+        // 如果是本地开发环境
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3001';
+        }
+
+        // 如果是云托管环境，使用当前域名
+        return window.location.origin;
     }
 
     // 显示加载状态
@@ -239,7 +251,31 @@ class SimpleAPI {
                         userCount: 89
                     }
                 };
-                
+
+            case 'checkWebAdmin':
+                // 模拟管理员验证
+                const { openid, adminKey } = data;
+                console.log('模拟管理员验证:', { openid, adminKey });
+
+                // 简单的模拟验证逻辑
+                if (openid && openid.length > 10) {
+                    return {
+                        success: true,
+                        isAdmin: true,
+                        adminInfo: {
+                            name: '管理员',
+                            role: 'admin',
+                            permissions: ['all']
+                        }
+                    };
+                } else {
+                    return {
+                        success: false,
+                        isAdmin: false,
+                        message: '无效的OpenID'
+                    };
+                }
+
             default:
                 return { success: false, message: '未知操作' };
         }
