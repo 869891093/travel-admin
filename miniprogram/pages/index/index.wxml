@@ -1,0 +1,82 @@
+<!--index.wxml-->
+<view class="container">
+
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <view class="search-box">
+      <icon type="search" size="16" color="#999"></icon>
+      <input 
+        placeholder="搜索目的地、景点" 
+        class="search-input" 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput" 
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
+      />
+      <view class="search-actions">
+        <text class="search-btn" bindtap="onSearchConfirm" wx:if="{{searchKeyword}}">搜索</text>
+        <text class="clear-btn" bindtap="clearSearch" wx:if="{{searchKeyword}}">清除</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 轮播图模块 -->
+  <view class="banner-container" wx:if="{{banners && banners.length > 0}}">
+    <swiper class="banner-swiper" 
+            indicator-dots="{{true}}" 
+            autoplay="{{true}}" 
+            interval="{{3000}}" 
+            duration="{{500}}"
+            circular="{{true}}"
+            indicator-color="rgba(255, 255, 255, 0.3)"
+            indicator-active-color="#ffffff">
+      <swiper-item wx:for="{{banners}}" wx:key="id" bindtap="onBannerTap" data-banner="{{item}}">
+        <image src="{{item.imageUrl}}" class="banner-image" mode="aspectFill" />
+        <view class="banner-overlay">
+          <text class="banner-title">{{item.title}}</text>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 导航栏 -->
+  <view class="nav-section">
+    <view class="nav-container">
+      <view class="nav-item" bindtap="onNavTap" data-nav="北疆">
+        <text class="nav-text">北疆</text>
+      </view>
+      <view class="nav-item" bindtap="onNavTap" data-nav="南疆">
+        <text class="nav-text">南疆</text>
+      </view>
+      <view class="nav-item" bindtap="onNavTap" data-nav="徒步">
+        <text class="nav-text">徒步</text>
+      </view>
+      <view class="nav-item" bindtap="onNavTap" data-nav="定制">
+        <text class="nav-text">定制</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门推荐 -->
+  <view class="section-title">
+    <text class="title-text">热门推荐</text>
+  </view>
+
+  <!-- 产品卡片列表 -->
+  <view class="product-list">
+    <view class="product-card" wx:for="{{products}}" wx:key="id" bindtap="goToDetail" data-id="{{item._id}}">
+      <image src="{{item.coverImage}}" class="product-image" mode="aspectFill" />
+      <view class="product-info">
+        <view class="product-title">{{item.title}}</view>
+        <view class="product-desc">{{item.description}}</view>
+        <view class="product-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">{{tag}}</text>
+        </view>
+        <view class="product-price">
+          <text class="price-label">成人最低起价</text>
+          <text class="price-value">¥{{item.adultPrice}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

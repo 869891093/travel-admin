@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅游小程序管理后台 - 微信开发者工具版</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 微信云开发SDK -->
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-plane"></i> 旅游小程序管理后台 - 真实数据版</h1>
+                <div class="header-actions">
+                    <button class="btn-refresh" onclick="refreshCurrentPage()">
+                        <i class="fas fa-sync-alt"></i> 刷新
+                    </button>
+                    <div class="connection-status" id="connectionStatus">
+                        <i class="fas fa-circle"></i> 连接状态
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 环境提示 -->
+        <div class="environment-notice">
+            <div class="notice-content">
+                <i class="fas fa-info-circle"></i>
+                <span>当前运行在微信开发者工具中，可以获取真实的云数据库数据</span>
+            </div>
+        </div>
+
+        <!-- 导航菜单 -->
+        <nav class="nav-menu">
+            <button class="nav-item active" onclick="switchPage('dashboard')" data-page="dashboard">
+                <i class="fas fa-tachometer-alt"></i> 仪表盘
+            </button>
+            <button class="nav-item" onclick="switchPage('products')" data-page="products">
+                <i class="fas fa-map-marked-alt"></i> 产品管理
+            </button>
+            <button class="nav-item" onclick="switchPage('orders')" data-page="orders">
+                <i class="fas fa-shopping-cart"></i> 订单管理
+            </button>
+            <button class="nav-item" onclick="switchPage('refunds')" data-page="refunds">
+                <i class="fas fa-undo-alt"></i> 退款管理
+            </button>
+            <button class="nav-item" onclick="switchPage('banners')" data-page="banners">
+                <i class="fas fa-images"></i> 轮播图管理
+            </button>
+            <button class="nav-item" onclick="switchPage('settings')" data-page="settings">
+                <i class="fas fa-cog"></i> 系统设置
+            </button>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 仪表盘 -->
+            <div id="dashboard" class="page-content active">
+                <div class="page-header">
+                    <h2>仪表盘</h2>
+                    <p>系统概览和统计信息（真实数据）</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="productCount">-</h3>
+                            <p>产品数量</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="orderCount">-</h3>
+                            <p>订单数量</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-undo-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="refundCount">-</h3>
+                            <p>退款申请</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="userCount">-</h3>
+                            <p>用户数量</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-section">
+                    <h3>最近订单（真实数据）</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>订单号</th>
+                                    <th>产品名称</th>
+                                    <th>金额</th>
+                                    <th>状态</th>
+                                    <th>创建时间</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <tr>
+                                    <td colspan="5" class="loading">正在从云数据库加载...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 产品管理 -->
+            <div id="products" class="page-content">
+                <div class="page-header">
+                    <h2>产品管理（真实数据）</h2>
+                    <button class="btn-primary" onclick="showAddProductModal()">
+                        <i class="fas fa-plus"></i> 添加产品
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>产品名称</th>
+                                <th>价格</th>
+                                <th>地区</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <tr>
+                                <td colspan="6" class="loading">正在从云数据库加载...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 订单管理 -->
+            <div id="orders" class="page-content">
+                <div class="page-header">
+                    <h2>订单管理（真实数据）</h2>
+                    <div class="page-actions">
+                        <select id="orderStatusFilter" onchange="filterOrders()">
+                            <option value="">全部状态</option>
+                            <option value="pending">待付款</option>
+                            <option value="paid">已付款</option>
+                            <option value="confirmed">已确认</option>
+                            <option value="completed">已完成</option>
+                            <option value="cancelled">已取消</option>
+                            <option value="refunded">已退款</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>产品名称</th>
+                                <th>用户</th>
+                                <th>金额</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr>
+                                <td colspan="7" class="loading">正在从云数据库加载...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 退款管理 -->
+            <div id="refunds" class="page-content">
+                <div class="page-header">
+                    <h2>退款管理（真实数据）</h2>
+                    <div class="page-actions">
+                        <select id="refundStatusFilter" onchange="filterRefunds()">
+                            <option value="">全部状态</option>
+                            <option value="pending">待审核</option>
+                            <option value="approved">已通过</option>
+                            <option value="rejected">已拒绝</option>
+                            <option value="completed">已完成</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>退款单号</th>
+                                <th>订单号</th>
+                                <th>退款金额</th>
+                                <th>退款原因</th>
+                                <th>状态</th>
+                                <th>申请时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="refundsTable">
+                            <tr>
+                                <td colspan="7" class="loading">正在从云数据库加载...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 轮播图管理 -->
+            <div id="banners" class="page-content">
+                <div class="page-header">
+                    <h2>轮播图管理（真实数据）</h2>
+                    <button class="btn-primary" onclick="showAddBannerModal()">
+                        <i class="fas fa-plus"></i> 添加轮播图
+                    </button>
+                </div>
+                
+                <div class="banner-grid" id="bannersGrid">
+                    <div class="loading-card">正在从云数据库加载...</div>
+                </div>
+            </div>
+
+            <!-- 系统设置 -->
+            <div id="settings" class="page-content">
+                <div class="page-header">
+                    <h2>系统设置</h2>
+                    <p>云开发环境配置和数据库操作</p>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>云开发配置</h3>
+                    <div class="form-group">
+                        <label for="envIdInput">环境ID:</label>
+                        <input type="text" id="envIdInput" value="new-travel-2gy6d6oy7ee5fb0e" readonly>
+                        <small>当前环境ID（只读）</small>
+                    </div>
+                    <button class="btn-primary" onclick="testConnection()">测试连接</button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>数据库操作</h3>
+                    <div class="danger-zone">
+                        <button class="btn-secondary" onclick="clearCache()">清除缓存</button>
+                        <button class="btn-danger" onclick="resetData()">重置数据</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 加载中遮罩 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>正在从云数据库加载...</p>
+        </div>
+    </div>
+
+    <!-- 脚本文件 -->
+    <script src="js/config.js"></script>
+    <script src="js/cloud-api.js"></script>
+    <script src="js/app-simple.js"></script>
+    
+    <script>
+        // 初始化微信云开发
+        if (typeof wx !== 'undefined' && wx.cloud) {
+            wx.cloud.init({
+                env: 'new-travel-2gy6d6oy7ee5fb0e'
+            });
+            console.log('微信云开发初始化完成');
+        }
+    </script>
+</body>
+</html>

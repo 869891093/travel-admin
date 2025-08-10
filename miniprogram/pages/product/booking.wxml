@@ -1,0 +1,119 @@
+<!--booking.wxml-->
+<view class="container">
+  <!-- 产品信息 -->
+  <view class="product-info">
+    <image src="{{product.coverImage || ''}}" class="product-image" mode="aspectFill" />
+    <view class="product-details">
+      <view class="product-title">{{product.title || '产品加载中...'}}</view>
+      <view class="travel-date">出行日期：{{travelDate}}</view>
+      <view class="price-info">
+        <text class="price-label">成人价：</text>
+        <text class="price-value">¥{{adultPrice}}</text>
+        <text class="price-label">儿童价：</text>
+        <text class="price-value">¥{{childPrice}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 人数选择 -->
+  <view class="section">
+    <view class="section-title">选择人数</view>
+    <view class="traveler-selector">
+      <view class="traveler-item">
+        <view class="traveler-info">
+          <text class="traveler-label">成人</text>
+          <text class="traveler-desc">12周岁以上</text>
+        </view>
+        <view class="number-selector">
+          <text class="number-btn" bindtap="decreaseAdult">-</text>
+          <text class="number-value">{{adultCount}}</text>
+          <text class="number-btn" bindtap="increaseAdult">+</text>
+        </view>
+      </view>
+      
+      <view class="traveler-item">
+        <view class="traveler-info">
+          <text class="traveler-label">儿童</text>
+          <text class="traveler-desc">2-12周岁</text>
+        </view>
+        <view class="number-selector">
+          <text class="number-btn" bindtap="decreaseChild">-</text>
+          <text class="number-value">{{childCount}}</text>
+          <text class="number-btn" bindtap="increaseChild">+</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系人信息 -->
+  <view class="section">
+    <view class="section-title">联系人信息</view>
+    <view class="contact-form">
+      <view class="form-item">
+        <text class="form-label">姓名</text>
+        <input class="form-input" placeholder="请输入联系人姓名" value="{{contactName}}" bindinput="onContactNameInput" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">手机号</text>
+        <input class="form-input" type="number" placeholder="请输入手机号" value="{{contactPhone}}" bindinput="onContactPhoneInput" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">
+          <text class="label-text">身份证号</text>
+          <text class="required">*</text>
+        </view>
+        <input class="form-input" 
+               placeholder="请输入身份证号" 
+               value="{{idCard}}"
+               bindinput="onIdCardInput" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 特殊要求 -->
+  <view class="section">
+    <view class="section-title">特殊要求</view>
+    <textarea class="special-requirements" placeholder="请输入特殊要求（选填）" value="{{specialRequirements}}" bindinput="onSpecialRequirementsInput"></textarea>
+  </view>
+
+  <!-- 费用明细 -->
+  <view class="section">
+    <view class="section-title">费用明细</view>
+    <view class="cost-breakdown">
+      <view class="cost-item">
+        <text class="cost-label">成人费用</text>
+        <text class="cost-value">¥{{adultCost}}</text>
+      </view>
+      <view class="cost-item" wx:if="{{childCount > 0}}">
+        <text class="cost-label">儿童费用</text>
+        <text class="cost-value">¥{{childCost}}</text>
+      </view>
+      <view class="cost-divider"></view>
+      <view class="cost-item total">
+        <text class="cost-label">总计</text>
+        <text class="cost-value">¥{{totalCost}}</text>
+      </view>
+    </view>
+  </view>
+
+    <!-- 预订须知 -->
+  <view class="section">
+    <view class="section-title">预订须知</view>
+    <view class="booking-notices">
+      <view class="notice-item" wx:for="{{bookingNotices || []}}" wx:key="*this">
+        <text class="notice-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="total-info">
+      <text class="total-label">总计：</text>
+      <text class="total-value">¥{{totalCost}}</text>
+    </view>
+    <button class="btn-primary" bindtap="submitOrder" loading="{{submitting}}">
+      {{submitting ? '处理中...' : '立即支付'}}
+    </button>
+  </view>
+</view>

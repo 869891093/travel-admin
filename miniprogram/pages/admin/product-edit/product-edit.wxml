@@ -1,0 +1,290 @@
+<!--product-edit.wxml-->
+<!-- 在页面顶部添加返回按钮 -->
+<view class="page-header">
+  <view class="header-content">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-text">← 返回</text>
+    </view>
+    <text class="form-title">{{isEdit ? '编辑产品' : '添加产品'}}</text>
+    <view class="placeholder"></view>
+  </view>
+  <!-- 添加测试按钮 -->
+  <button class="test-btn" bindtap="testInput" style="margin: 10rpx; padding: 10rpx; background: #ff6b35; color: white; border-radius: 10rpx; font-size: 20rpx;">测试数据</button>
+</view>
+
+<!-- 现有内容保持不变 -->
+<view class="container">
+
+  <view class="form-content">
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+      
+      <view class="form-item">
+        <text class="label">产品名称 *</text>
+        <input class="input" value="{{product.title}}" data-field="title" bindinput="onInput" placeholder="请输入产品名称" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">产品描述 *</text>
+        <textarea class="textarea" value="{{product.description}}" data-field="description" bindinput="onInput" placeholder="请输入产品描述" />
+      </view>
+
+      <view class="form-row">
+        <view class="form-item">
+          <text class="label">成人价格 *</text>
+          <input class="input" type="number" value="{{product.adultPrice}}" data-field="adultPrice" bindinput="onInput" placeholder="请输入价格" />
+        </view>
+        <view class="form-item">
+          <text class="label">儿童价格</text>
+          <input class="input" type="number" value="{{product.childPrice}}" data-field="childPrice" bindinput="onInput" placeholder="请输入价格" />
+        </view>
+      </view>
+
+      <view class="form-item">
+        <text class="label">所属区域 *</text>
+        <picker class="picker" range="{{regions}}" range-key="name" bindchange="onRegionChange">
+          <view class="picker-text">{{product.region || '请选择区域'}}</view>
+        </picker>
+      </view>
+
+      <!-- 新增：标签管理 -->
+      <view class="form-item">
+        <text class="label">产品标签</text>
+        <view class="tags-container">
+          <view class="tags-list">
+            <view class="tag-item" wx:for="{{product.tags}}" wx:key="*this">
+              <text class="tag-text">{{item}}</text>
+              <text class="tag-remove" bindtap="removeTag" data-index="{{index}}">×</text>
+            </view>
+          </view>
+          <view class="tag-input-container">
+            <input class="tag-input" 
+                   value="{{newTag}}" 
+                   bindinput="onTagInput" 
+                   bindconfirm="addTag"
+                   placeholder="输入标签后按回车添加" />
+            <button class="btn-add-tag" bindtap="addTag">添加</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 价格日历 -->
+    <view class="form-section">
+      <view class="section-title">
+        <text>价格日历</text>
+        <button class="btn-add" bindtap="addCalendarPrice">批量设置</button>
+      </view>
+      <view class="calendar-container">
+        <view class="month-selector">
+          <text class="month-arrow" bindtap="prevMonth">‹</text>
+          <text class="month-text">{{currentMonthText}}</text>
+          <text class="month-arrow" bindtap="nextMonth">›</text>
+        </view>
+        
+        <view class="calendar-grid">
+          <view class="week-header">
+            <text wx:for="{{weekDays}}" wx:key="*this">{{item}}</text>
+          </view>
+          <view class="calendar-days">
+            <view class="day-item {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isAvailable ? 'available' : 'unavailable'}}" 
+                  wx:for="{{calendarDays}}" 
+                  wx:key="date"
+                  bindtap="editDatePrice"
+                  data-date="{{item.date}}">
+              <text class="day-number">{{item.day}}</text>
+              <text class="day-price" wx:if="{{item.isCurrentMonth && item.isAvailable}}">
+                ¥{{item.adultPrice}}
+              </text>
+              <text class="day-status" wx:if="{{item.isCurrentMonth && !item.isAvailable}}">
+                停售
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+  
+
+    <!-- 日历价格编辑弹窗 -->
+    <view wx:if="{{showCalendarEditor}}" class="calendar-editor-mask">
+      <view class="calendar-editor-modal">
+        <view class="editor-title">编辑 {{editingDate}} 价格</view>
+        <view class="editor-item">
+          <text class="label">成人价</text>
+          <input class="input" type="number" value="{{editingPrice.adultPrice}}" data-field="adultPrice" bindinput="onPriceInput" placeholder="请输入成人价" />
+        </view>
+        <view class="editor-item">
+          <text class="label">儿童价</text>
+          <input class="input" type="number" value="{{editingPrice.childPrice}}" data-field="childPrice" bindinput="onPriceInput" placeholder="请输入儿童价" />
+        </view>
+        <view class="editor-item">
+          <text class="label">可售</text>
+          <switch checked="{{editingPrice.available}}" bindchange="toggleAvailable" />
+        </view>
+        <view class="editor-actions">
+          <button class="btn" bindtap="cancelEdit">取消</button>
+          <button class="btn btn-primary" bindtap="saveDatePrice">保存</button>
+        </view>
+      </view>
+    </view>
+    
+    <view class="form-section">
+      <view class="section-title">主图管理</view>
+      <view class="cover-images-container">
+        <view class="cover-image-upload">
+          <button class="btn-upload-cover" bindtap="chooseCoverImage">上传主图</button>
+          <text class="upload-tip">支持多张图片，建议尺寸 800x600 像素</text>
+        </view>
+        <view class="cover-images-list">
+          <view class="cover-image-item" wx:for="{{product.images}}" wx:key="*this" wx:if="{{product.images && product.images.length > 0}}">
+            <view class="cover-image-row">
+              <image src="{{item}}" class="cover-image-preview" mode="aspectFill" />
+              <text class="cover-image-name">{{item.split('/').pop() || '主图 ' + (index + 1)}}</text>
+            </view>
+            <view class="cover-image-buttons">
+              <button class="btn-move-up" bindtap="moveCoverImageUp" data-index="{{index}}" wx:if="{{index > 0}}">上</button>
+              <button class="btn-move-down" bindtap="moveCoverImageDown" data-index="{{index}}" wx:if="{{index < product.images.length - 1}}">下</button>
+              <button class="btn-remove-cover-image" bindtap="removeCoverImage" data-index="{{index}}">删除</button>
+            </view>
+          </view>
+          <view wx:if="{{!product.images || product.images.length === 0}}" style="text-align: center; padding: 40rpx; color: #999;">
+            暂无主图
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 新增：详情图片管理 -->
+    <view class="form-section">
+      <view class="section-title">详情图片</view>
+      <view class="detail-images-container">
+        <view class="detail-image-upload">
+          <button class="btn-upload-detail-image" bindtap="chooseDetailImage">上传详情图片</button>
+          <text class="upload-tip">支持多张图片</text>
+        </view>
+        <view class="detail-images-list">
+          <view class="detail-image-item" wx:for="{{product.detailImages}}" wx:key="*this" wx:if="{{product.detailImages && product.detailImages.length > 0}}">
+            <view class="detail-image-row">
+              <image src="{{item}}" class="detail-image-preview" mode="aspectFill" />
+              <text class="detail-image-name">{{item.split('/').pop() || '详情图片 ' + (index + 1)}}</text>
+            </view>
+            <view class="detail-image-buttons">
+              <button class="btn-move-up" bindtap="moveDetailImageUp" data-index="{{index}}" wx:if="{{index > 0}}">上</button>
+              <button class="btn-move-down" bindtap="moveDetailImageDown" data-index="{{index}}" wx:if="{{index < product.detailImages.length - 1}}">下</button>
+              <button class="btn-remove-detail-image" bindtap="removeDetailImage" data-index="{{index}}">删除</button>
+            </view>
+          </view>
+          <view wx:if="{{!product.detailImages || product.detailImages.length === 0}}" style="text-align: center; padding: 40rpx; color: #999;">
+            暂无详情图片
+          </view>
+        </view>
+      </view>
+    </view>
+
+
+
+    <view class="form-section">
+      <view class="section-title">封面图片URL</view>
+      <view class="form-item">
+        <text class="label">封面图片URL（兼容旧版本）</text>
+        <input class="input" value="{{product.coverImage}}" data-field="coverImage" bindinput="onInput" placeholder="请输入图片URL" />
+      </view>
+    </view>
+
+    <!-- 行程安排管理 -->
+    <view class="form-section">
+      <view class="section-title">行程安排</view>
+      <view class="itinerary-container">
+        <button class="btn-add-itinerary" bindtap="addItineraryItem">添加行程</button>
+        <view class="itinerary-list">
+          <view class="itinerary-item" wx:for="{{product.itinerary}}" wx:key="index" wx:if="{{product.itinerary && product.itinerary.length > 0}}">
+            <view class="day-header">
+              <text class="day-title">第{{index + 1}}天</text>
+              <button class="btn-remove" bindtap="removeItineraryItem" data-index="{{index}}">删除</button>
+            </view>
+            <editor
+              id="itinerary-editor-{{index}}"
+              class="rich-editor"
+              placeholder="请输入第{{index + 1}}天的行程安排..."
+              data-index="{{index}}"
+              bindready="onItineraryEditorReady"
+              bindinput="onItineraryEditorInput"
+              bindblur="onItineraryEditorBlur"
+              show-img-size
+              show-img-toolbar
+              show-img-resize
+            ></editor>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 费用说明管理 -->
+    <view class="form-section">
+      <view class="section-title">费用说明</view>
+      <view class="fees-container">
+        <view class="fee-buttons">
+          <button class="btn-add-fee" bindtap="addFeeItem" data-type="包含">添加包含费用</button>
+          <button class="btn-add-fee" bindtap="addFeeItem" data-type="不包含">添加不包含费用</button>
+        </view>
+
+        <view class="fee-items">
+          <view class="fee-item" wx:for="{{product.fees}}" wx:key="index">
+            <view class="fee-header">
+              <text class="fee-type">{{item.type}}费用</text>
+              <button class="btn-remove" bindtap="removeFeeItem" data-index="{{index}}">删除</button>
+            </view>
+            <editor
+              id="fee-editor-{{index}}"
+              class="rich-editor"
+              placeholder="请输入{{item.type}}费用说明..."
+              data-index="{{index}}"
+              bindready="onFeeEditorReady"
+              bindinput="onFeeEditorInput"
+              bindblur="onFeeEditorBlur"
+              show-img-size
+              show-img-toolbar
+              show-img-resize
+            ></editor>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 预订须知管理 -->
+    <view class="form-section">
+      <view class="section-title">预订须知</view>
+      <view class="notices-container">
+        <button class="btn-add-notice" bindtap="addNoticeItem">添加须知</button>
+
+        <view class="notices-list">
+          <view class="notice-item" wx:for="{{product.notices}}" wx:key="index" wx:if="{{product.notices && product.notices.length > 0}}">
+            <view class="notice-header">
+              <text class="notice-title">须知{{index + 1}}</text>
+              <button class="btn-remove" bindtap="removeNoticeItem" data-index="{{index}}">删除</button>
+            </view>
+            <editor
+              id="notice-editor-{{index}}"
+              class="rich-editor"
+              placeholder="请输入预订须知{{index + 1}}..."
+              data-index="{{index}}"
+              bindready="onNoticeEditorReady"
+              bindinput="onNoticeEditorInput"
+              bindblur="onNoticeEditorBlur"
+              show-img-size
+              show-img-toolbar
+              show-img-resize
+            ></editor>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-footer">
+      <button class="btn btn-primary" bindtap="saveProduct">保存</button>
+    </view>
+  </view>
+</view> 

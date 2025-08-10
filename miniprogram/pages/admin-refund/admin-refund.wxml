@@ -1,0 +1,80 @@
+<!--miniprogram/pages/admin-refund/admin-refund.wxml-->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="title">退款管理</view>
+    <view class="refresh-btn" bindtap="onRefresh">
+      <text class="icon">🔄</text>
+    </view>
+  </view>
+
+  <!-- 状态筛选 -->
+  <view class="filter-section">
+    <picker bindchange="onStatusChange" value="{{statusFilter}}" range-key="label" range="{{statusOptions}}">
+      <view class="filter-picker">
+        <text>状态筛选：{{statusOptions[statusFilter] || '全部'}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 退款列表 -->
+  <view class="refund-list">
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+
+    <view wx:elif="{{refundList.length === 0}}" class="empty">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无退款申请</text>
+    </view>
+
+    <view wx:else>
+      <view class="refund-item" wx:for="{{refundList}}" wx:key="_id">
+        <view class="refund-header">
+          <view class="refund-id">退款单号：{{item.outRefundNo}}</view>
+          <view class="refund-status status-{{item.status}}">
+            <text wx:if="{{item.status === 'pending'}}">待审核</text>
+            <text wx:elif="{{item.status === 'approved'}}">已通过</text>
+            <text wx:elif="{{item.status === 'rejected'}}">已拒绝</text>
+            <text wx:elif="{{item.status === 'completed'}}">已完成</text>
+            <text wx:else>{{item.status}}</text>
+          </view>
+        </view>
+
+        <view class="refund-info">
+          <view class="info-row">
+            <text class="label">退款金额：</text>
+            <text class="amount">¥{{item.amount}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">申请时间：</text>
+            <text class="time">{{item.applyTime}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">退款原因：</text>
+            <text class="reason">{{item.reason}}</text>
+          </view>
+          <view wx:if="{{item.reviewNote}}" class="info-row">
+            <text class="label">审核备注：</text>
+            <text class="note">{{item.reviewNote}}</text>
+          </view>
+        </view>
+
+        <view class="refund-actions">
+          <button wx:if="{{item.status === 'pending'}}" 
+                  class="btn-review" 
+                  bindtap="reviewRefund" 
+                  data-id="{{item._id}}">
+            审核
+          </button>
+          <button class="btn-detail" 
+                  bindtap="viewDetail" 
+                  data-id="{{item._id}}">
+            详情
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

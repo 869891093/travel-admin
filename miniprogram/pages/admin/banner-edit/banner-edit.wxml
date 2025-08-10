@@ -1,0 +1,80 @@
+<!--banner-edit.wxml-->
+<view class="container">
+  <view class="form-header">
+    <view class="header-content">
+      <view class="back-btn" bindtap="goBack">
+        <text class="back-text">← 返回</text>
+      </view>
+      <text class="form-title">{{isEdit ? '编辑轮播图' : '添加轮播图'}}</text>
+      <view class="placeholder"></view>
+    </view>
+  </view>
+
+  <view class="form-content">
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+      
+      <view class="form-item">
+        <text class="label">标题 *</text>
+        <input class="input" value="{{banner.title}}" data-field="title" bindinput="onInput" placeholder="请输入轮播图标题" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">描述</text>
+        <textarea class="textarea" value="{{banner.desc}}" data-field="desc" bindinput="onInput" placeholder="请输入轮播图描述" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">轮播图图片 *</text>
+
+        <!-- 图片上传按钮 -->
+        <view class="image-upload-section">
+          <button class="btn-upload" bindtap="chooseBannerImage">📁 上传轮播图</button>
+          <text class="upload-tip">支持 JPG、PNG、GIF 格式，建议尺寸 1200x400</text>
+        </view>
+
+        <!-- 图片预览 -->
+        <view class="image-preview" wx:if="{{banner.imageUrl}}">
+          <image src="{{banner.imageUrl}}" class="preview-image" mode="aspectFit" />
+        </view>
+
+        <!-- URL输入框（备用方案） -->
+        <view class="url-input-section">
+          <text class="label-small">或直接输入图片URL:</text>
+          <input class="input" value="{{banner.imageUrl}}" data-field="imageUrl" bindinput="onInput" placeholder="https://example.com/image.jpg" />
+        </view>
+      </view>
+
+      <view class="form-item">
+        <text class="label">产品ID</text>
+        <input class="input" value="{{banner.productId}}" data-field="productId" bindinput="onInput" placeholder="请输入产品ID（用于跳转到产品详情）" />
+        <text class="input-tip">输入产品ID后，点击轮播图将跳转到对应产品详情页</text>
+      </view>
+
+      <view class="form-item">
+        <text class="label">自定义链接</text>
+        <input class="input" value="{{banner.linkUrl}}" data-field="linkUrl" bindinput="onInput" placeholder="自定义链接地址（可选）" />
+        <text class="input-tip">如果设置了产品ID，此字段将被忽略</text>
+      </view>
+
+      <view class="form-item">
+        <text class="label">排序</text>
+        <input class="input" type="number" value="{{banner.sort}}" data-field="sort" bindinput="onInput" placeholder="请输入排序数字" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">状态</text>
+        <picker class="picker" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+          <view class="picker-text">{{getStatusText(banner.status)}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-footer">
+      <view class="button-group">
+        <button class="btn btn-cancel" bindtap="goBack">取消</button>
+        <button class="btn btn-primary" bindtap="saveBanner">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

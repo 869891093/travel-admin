@@ -1,0 +1,163 @@
+<!--pages/profile/profile.wxml-->
+<view class="container">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!isLoggedIn}}" class="login-container">
+    <view class="login-card">
+      <view class="login-header">
+        <image src="/images/icons/avatar.png" class="login-avatar" mode="aspectFill" />
+        <text class="login-title">欢迎使用跟团游</text>
+        <text class="login-subtitle">登录</text>
+      </view>
+      
+      <!-- 一键登录按钮 - 使用微信官方getPhoneNumber -->
+      <button class="one-click-login-btn" 
+              open-type="getPhoneNumber" 
+              bindgetphonenumber="oneClickLogin">
+        <text class="one-click-login-btn-text">一键登录</text>
+      </button>
+      
+      <view class="login-tips">
+        <text class="tips-text">使用手机号登录可以：</text>
+        <view class="tips-list">
+          <text class="tips-item">1. 同步您的订单信息</text>
+          <text class="tips-item">2. 保持数据一致性</text>
+          <text class="tips-item">3. 多设备数据同步</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:else>
+    <!-- 用户头像和基本信息 -->
+    <view class="user-header">
+      <view class="avatar-section">
+        <image src="{{userInfo.avatarUrl || '/images/icons/avatar.png'}}" class="avatar" mode="aspectFill" />
+        <view class="user-info">
+          <text class="nickname">{{userInfo.nickName || '微信用户'}}</text>
+          <text class="user-id" wx:if="{{userInfo.userId}}">ID: {{userInfo.userId}}</text>
+          <text class="user-id" wx:else>ID: 生成中...</text>
+        </view>
+        <view class="refresh-btn" bindtap="refreshUserInfo">
+          <text class="refresh-icon">🔄</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 管理员卡片 - 只有超级管理员可见 -->
+    <view wx:if="{{isSuperAdmin}}" class="admin-card">
+      <view class="card-header">
+        <text class="card-title">管理员功能</text>
+        <view class="admin-badge">超级管理员</view>
+      </view>
+      
+      <view class="admin-item" bindtap="goToAdmin">
+        <view class="admin-icon">⚙️</view>
+        <text class="admin-text">管理后台</text>
+      </view>
+    </view>
+
+    <!-- 个人信息卡片 -->
+    <view class="info-card">
+      <view class="card-header">
+        <text class="card-title">个人信息</text>
+        <text class="edit-btn" bindtap="toggleEdit">{{isEditing ? '完成' : '编辑'}}</text>
+      </view>
+      
+      <!-- 手机号 -->
+      <view class="info-item">
+        <view class="info-label">
+          <text class="label-text">手机号</text>
+          <text class="required">*</text>
+        </view>
+        <view class="info-content">
+          <text wx:if="{{phone}}" class="info-value">{{phone}}</text>
+          <text wx:else class="info-placeholder">未设置</text>
+          <button wx:if="{{!phone}}" 
+                  class="phone-btn" 
+                  open-type="getPhoneNumber" 
+                  bindgetphonenumber="getPhoneNumber">
+            获取手机号
+          </button>
+        </view>
+      </view>
+
+      <!-- 微信昵称 -->
+      <view class="info-item">
+        <view class="info-label">
+          <text class="label-text">昵称</text>
+        </view>
+        <view class="info-content">
+          <text wx:if="{{!isEditing}}" class="info-value">{{userInfo.nickName || '未设置'}}</text>
+          <input wx:if="{{isEditing}}" 
+                 class="edit-input" 
+                 value="{{editingNickName}}"
+                 placeholder="请输入昵称"
+                 bindinput="onNickNameInput"
+                 maxlength="20" />
+        </view>
+      </view>
+
+      <!-- 性别 -->
+      <view class="info-item">
+        <view class="info-label">
+          <text class="label-text">性别</text>
+        </view>
+        <view class="info-content">
+          <text wx:if="{{!isEditing}}" class="info-value">{{userInfo.gender === 1 ? '男' : userInfo.gender === 2 ? '女' : '未知'}}</text>
+          <picker wx:if="{{isEditing}}" 
+                  mode="selector" 
+                  range="{{genderOptions}}" 
+                  value="{{genderIndex}}"
+                  bindchange="onGenderChange">
+            <view class="picker-value">{{genderOptions[genderIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 地区 -->
+      <view class="info-item">
+        <view class="info-label">
+          <text class="label-text">地区</text>
+        </view>
+        <view class="info-content">
+          <text wx:if="{{!isEditing}}" class="info-value">{{userInfo.province}} {{userInfo.city}}</text>
+          <picker wx:if="{{isEditing}}" 
+                  mode="region" 
+                  value="{{regionValue}}"
+                  bindchange="onRegionChange">
+            <view class="picker-value">{{regionValue[0]}} {{regionValue[1]}} {{regionValue[2]}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-card">
+      <view class="menu-item" bindtap="goToOrders">
+        <view class="menu-icon">📋</view>
+        <text class="menu-text">我的订单</text>
+      </view>
+      
+      <view class="menu-item" bindtap="goToSettings">
+        <view class="menu-icon">⚙️</view>
+        <text class="menu-text">设置</text>
+      </view>
+      
+      <view class="menu-item" bindtap="contactService">
+        <view class="menu-icon">💬</view>
+        <text class="menu-text">联系客服</text>
+      </view>
+    </view>
+
+    <!-- 退出登录 -->
+    <view class="logout-section">
+      <button class="logout-btn" bindtap="logout">退出登录</button>
+    </view>
+
+    <!-- 版本信息 -->
+    <view class="version-info">
+      <text class="version-text">版本 1.0.0</text>
+    </view>
+  </view>
+</view>

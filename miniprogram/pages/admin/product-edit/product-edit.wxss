@@ -1,0 +1,1353 @@
+/* product-edit.wxss */
+/* 页面头部样式 */
+.page-header {
+  background: #4b6e58;
+  color: white;
+  padding: 30rpx 40rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.back-btn {
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  background: rgba(255, 255, 255, 0.2);
+  min-width: 120rpx;
+  text-align: center;
+}
+
+.back-text {
+  font-size: 28rpx;
+  color: white;
+}
+
+.page-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  flex: 1;
+  text-align: center;
+}
+
+.placeholder {
+  min-width: 120rpx;
+}
+
+/* 调整容器样式 */
+.container {
+  padding-top: 0; /* 移除顶部padding，因为有了header */
+  background: #f5f5f5;
+  min-height: 100vh;
+  width: 100vw;         /* 保证容器宽度自适应 */
+  max-width: 100vw;     /* 防止超出屏幕 */
+  box-sizing: border-box;
+}
+
+.form-header {
+  background: #4b6e58;
+  color: white;
+  padding: 30rpx 40rpx;
+  text-align: center;
+}
+
+.form-title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+
+
+.form-content {
+  padding: 20rpx;
+  width: 100%;
+  max-width: 900rpx;    /* 可根据实际需要调整最大宽度 */
+  margin: 0 auto;       /* 居中显示 */
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.form-section {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.btn-add {
+  background: #4b6e58;
+  color: white;
+  border: none;
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+  font-size: 24rpx;
+}
+
+.form-item {
+  margin-bottom: 25rpx;
+}
+
+.form-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.form-row .form-item {
+  flex: 1;
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+  font-weight: 500;
+}
+
+.input {
+  width: 100%;
+  padding: 20rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+}
+
+
+
+.textarea {
+  width: 100%;
+  padding: 20rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+  min-height: 120rpx;
+}
+
+.picker {
+  width: 100%;
+  padding: 20rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  background: #fafafa;
+}
+
+.picker-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 标签样式 */
+.tags-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+.tag-item {
+  background: var(--primary-color, #4b6e58);
+  color: #fff;
+  border-radius: 20rpx;
+  padding: 8rpx 20rpx;
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+}
+.tag-text {
+  margin-right: 8rpx;
+}
+.tag-remove {
+  color: #fff;
+  font-size: 28rpx;
+  margin-left: 2rpx;
+  cursor: pointer;
+}
+.tag-input-container {
+  display: flex;
+  gap: 10rpx;
+}
+.tag-input {
+  flex: 1;
+  border: 1rpx solid #ddd;
+  border-radius: 10rpx;
+  padding: 10rpx 16rpx;
+  font-size: 24rpx;
+}
+.btn-add-tag {
+  background: var(--primary-color, #4b6e58);
+  color: #fff;
+  border: none;
+  border-radius: 10rpx;
+  padding: 10rpx 24rpx;
+  font-size: 24rpx;
+}
+
+/* 费用样式 */
+.fees-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.fee-item {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+  padding: 15rpx;
+  background: #f8f8f8;
+  border-radius: 10rpx;
+}
+
+.fee-type {
+  background: #4b6e58;
+  color: white;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  min-width: 120rpx;
+  text-align: center;
+}
+
+.fee-desc {
+  flex: 1;
+  padding: 10rpx;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+}
+
+.fee-delete {
+  color: #ff4444;
+  font-size: 32rpx;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 行程样式 */
+.itinerary-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.itinerary-item {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+  padding: 15rpx;
+  background: #f8f8f8;
+  border-radius: 10rpx;
+}
+
+.day {
+  background: #4b6e58;
+  color: white;
+  padding: 8rpx 15rpx;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  min-width: 100rpx;
+  text-align: center;
+}
+
+.content {
+  flex: 1;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.delete {
+  color: #ff4444;
+  font-size: 32rpx;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 注意事项样式 */
+.notices-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.notice-item {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+  padding: 15rpx;
+  background: #f8f8f8;
+  border-radius: 10rpx;
+}
+
+.notice-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.form-footer {
+  padding: 40rpx 20rpx;
+  background: white;
+  position: sticky;
+  bottom: 0;
+}
+
+.btn {
+  width: 100%;
+  padding: 25rpx;
+  border-radius: 15rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  border: none;
+}
+
+.btn-primary {
+  background: #4b6e58;
+  color: white;
+} 
+
+.calendar-container {
+  margin-bottom: 20rpx;
+}
+.month-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+.month-arrow {
+  font-size: 36rpx;
+  padding: 0 20rpx;
+  color: #4b6e58;
+  cursor: pointer;
+}
+.month-text {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+.calendar-grid {
+  background: #fff;
+  border-radius: 10rpx;
+  padding: 10rpx;
+}
+.week-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+.calendar-days {
+  display: flex;
+  flex-wrap: wrap;
+}
+.day-item {
+  width: 13%;
+  text-align: center;
+  margin-bottom: 10rpx;
+  padding: 8rpx 0;
+  border-radius: 8rpx;
+  background: #f8f8f8;
+  position: relative;
+  cursor: pointer;
+}
+.day-item.other-month {
+  color: #bbb;
+  background: #f0f0f0;
+}
+.day-item.available {
+  border: 2rpx solid #4b6e58;
+}
+.day-item.unavailable {
+  background: #ffeaea;
+  color: #ff4444;
+}
+.day-number {
+  font-size: 24rpx;
+}
+.day-price {
+  font-size: 20rpx;
+  color: #4b6e58;
+}
+.day-status {
+  font-size: 20rpx;
+  color: #ff4444;
+}
+.calendar-editor-mask {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.calendar-editor-modal {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  width: 80vw;
+  max-width: 600rpx;
+}
+.editor-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+.editor-item {
+  margin-bottom: 20rpx;
+}
+.editor-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+} 
+
+.detail-images-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-top: 10rpx;
+}
+.detail-image-item {
+  position: relative;
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+.detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12rpx;
+}
+.delete-detail-image {
+  position: absolute;
+  top: 6rpx;
+  right: 6rpx;
+  background: rgba(255, 77, 79, 0.9);
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 20rpx;
+  padding: 4rpx 14rpx;
+  z-index: 2;
+}
+.btn-add-detail-image {
+  width: 180rpx;
+  height: 180rpx;
+  background: #e6f7d9;
+  color: var(--primary-color, #4b6e58);
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} 
+
+/* 详情图片管理 - 修复布局问题 */
+.detail-images-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.detail-image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 15rpx;
+  background: #f8f8f8;
+  border-radius: 8rpx;
+}
+
+.btn-upload-detail-image {
+  background: var(--primary-color, #4b6e58);
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 15rpx 30rpx;
+  font-size: 26rpx;
+  width: 100%;
+}
+
+.upload-tip {
+  font-size: 22rpx;
+  color: #999;
+  text-align: center;
+}
+
+.detail-images-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  background: #fff;
+}
+
+.detail-image-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 12rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  box-sizing: border-box;
+}
+
+.detail-image-item:last-child {
+  border-bottom: none;
+}
+
+.detail-image-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.detail-image-preview {
+  width: 100rpx;
+  height: 70rpx;
+  border-radius: 6rpx;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.detail-image-name {
+  font-size: 24rpx;
+  color: #333;
+  font-weight: 500;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-image-buttons {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;           /* 允许按钮换行 */
+  gap: 6rpx;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.btn-move-up,
+.btn-move-down {
+  background: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 4rpx;
+  padding: 4rpx 8rpx;
+  font-size: 18rpx;
+  height: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 40rpx;
+  width: 40rpx;
+}
+
+.btn-remove-detail-image {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 4rpx;
+  padding: 4rpx 8rpx;
+  font-size: 18rpx;
+  height: 32rpx;
+  flex-shrink: 0;
+  min-width: 50rpx;
+  width: 50rpx;
+  margin-top: 6rpx;          /* 添加上边距，与上一行按钮保持间距 */
+}
+
+/* 确保容器有足够宽度 */
+.form-item {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 滚动条样式 */
+.detail-images-list::-webkit-scrollbar {
+  width: 6rpx;
+}
+
+.detail-images-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3rpx;
+}
+
+.detail-images-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3rpx;
+}
+
+.detail-images-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+} 
+
+/* 封面图片样式 */
+.cover-image-container {
+  width: 100%;
+}
+
+.cover-image-preview {
+  position: relative;
+  width: 100%;
+  height: 300rpx;
+  border-radius: 15rpx;
+  overflow: hidden;
+  margin-bottom: 20rpx;
+  border: 2rpx solid #e0e0e0;
+}
+
+.cover-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cover-image-preview:active .cover-image-overlay {
+  opacity: 1;
+}
+
+.btn-remove-cover {
+  background: rgba(255, 77, 79, 0.9);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 10rpx 20rpx;
+  font-size: 24rpx;
+}
+
+.cover-image-upload {
+  text-align: center;
+  padding: 40rpx;
+  border: 2rpx dashed #e0e0e0;
+  border-radius: 15rpx;
+  margin-bottom: 20rpx;
+  background: #fafafa;
+}
+
+.btn-upload-cover {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  margin-bottom: 10rpx;
+}
+
+.upload-tip {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+} 
+
+/* 主图管理样式 */
+.cover-images-container {
+  width: 100%;
+}
+
+.cover-image-upload {
+  text-align: center;
+  padding: 30rpx;
+  border: 2rpx dashed #e0e0e0;
+  border-radius: 15rpx;
+  margin-bottom: 20rpx;
+  background: #fafafa;
+}
+
+.btn-upload-cover {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  margin-bottom: 10rpx;
+}
+
+.cover-images-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  width: 100%;
+}
+
+.cover-image-item {
+  background: #fff;
+  border-radius: 15rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
+  border: 2rpx solid #f0f0f0;
+}
+
+.cover-image-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.cover-image-preview {
+  width: 120rpx;
+  height: 80rpx;
+  border-radius: 8rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.cover-image-name {
+  font-size: 26rpx;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cover-image-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.btn-move-up, .btn-move-down {
+  min-width: 40rpx;
+  width: 40rpx;
+  padding: 8rpx;
+  font-size: 20rpx;
+  border-radius: 6rpx;
+  border: none;
+  background: #722ed1;
+  color: white;
+  text-align: center;
+}
+
+.btn-remove-cover-image {
+  min-width: 50rpx;
+  width: 50rpx;
+  padding: 8rpx;
+  font-size: 20rpx;
+  border-radius: 6rpx;
+  border: none;
+  background: #ff4d4f;
+  color: white;
+  text-align: center;
+  margin-top: 6rpx;
+}
+
+.upload-tip {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .cover-image-preview {
+    width: 100rpx;
+    height: 70rpx;
+  }
+  
+  .cover-image-name {
+    font-size: 24rpx;
+  }
+  
+  .btn-move-up, .btn-move-down, .btn-remove-cover-image {
+    min-width: 35rpx;
+    width: 35rpx;
+    font-size: 18rpx;
+    padding: 6rpx;
+  }
+} 
+
+/* 行程安排样式 - 重新设计 */
+.itinerary-container {
+  width: 100%;
+}
+
+.itinerary-upload {
+  text-align: center;
+  padding: 25rpx;
+  border: 2rpx dashed #4b6e58;
+  border-radius: 20rpx;
+  margin-bottom: 25rpx;
+  background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+  transition: all 0.3s ease;
+}
+
+.itinerary-upload:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 15rpx rgba(75, 110, 88, 0.2);
+}
+
+.btn-add-itinerary {
+  background: linear-gradient(135deg, #4b6e58 0%, #5a7a65 100%);
+  color: white;
+  border: none;
+  border-radius: 30rpx;
+  padding: 18rpx 35rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(75, 110, 88, 0.3);
+}
+
+.itinerary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25rpx;
+}
+
+.itinerary-item {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 25rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.08);
+  border: 2rpx solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.itinerary-item:hover {
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.12);
+}
+
+.itinerary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.itinerary-day {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #4b6e58;
+  background: linear-gradient(135deg, #4b6e58 0%, #5a7a65 100%);
+  color: white;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(75, 110, 88, 0.3);
+}
+
+.itinerary-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15rpx;
+  padding-top: 15rpx;
+  border-top: 2rpx solid #f0f0f0;
+}
+
+.btn-remove-itinerary {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 12rpx 25rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  box-shadow: 0 2rpx 8rpx rgba(255, 77, 79, 0.3);
+}
+
+/* 行程安排样式 - 修复输入框交互问题 */
+.itinerary-textarea {
+  width: 100%;
+  min-height: 180rpx;
+  padding: 20rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 15rpx;
+  font-size: 28rpx;
+  background: #fff !important; /* 强制白色背景 */
+  box-sizing: border-box;
+  line-height: 1.6;
+  resize: none;
+  position: relative; /* 确保定位正确 */
+  z-index: 1; /* 确保在最上层 */
+  pointer-events: auto; /* 确保可以交互 */
+}
+
+.itinerary-textarea:focus {
+  border-color: #4b6e58;
+  background: #fff !important;
+  box-shadow: 0 0 0 4rpx rgba(75, 110, 88, 0.1);
+}
+
+/* 费用说明样式 - 重新设计 */
+.fees-container {
+  width: 100%;
+}
+
+.fee-category {
+  margin-bottom: 35rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 25rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.08);
+  border: 2rpx solid #f0f0f0;
+}
+
+.fee-category-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #4b6e58;
+  margin-bottom: 20rpx;
+  display: block;
+  padding-bottom: 15rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+  position: relative;
+}
+
+.fee-category-title::before {
+  content: '';
+  position: absolute;
+  bottom: -2rpx;
+  left: 0;
+  width: 60rpx;
+  height: 4rpx;
+  background: linear-gradient(135deg, #4b6e58 0%, #5a7a65 100%);
+  border-radius: 2rpx;
+}
+
+.fee-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.fee-item {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+  background: #fafafa;
+  padding: 15rpx;
+  border-radius: 15rpx;
+  border: 2rpx solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.fee-item:hover {
+  background: #f5f5f5;
+  border-color: #4b6e58;
+}
+
+/* 费用输入框样式 - 修复交互问题 */
+.fee-input {
+  flex: 1;
+  padding: 18rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #fff !important;
+  min-height: 60rpx;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.fee-input:focus {
+  border-color: #4b6e58;
+  box-shadow: 0 0 0 4rpx rgba(75, 110, 88, 0.1);
+}
+
+.btn-remove-fee {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  color: white;
+  border: none;
+  border-radius: 12rpx;
+  padding: 12rpx 18rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  flex-shrink: 0;
+  box-shadow: 0 2rpx 8rpx rgba(255, 77, 79, 0.3);
+}
+
+.btn-add-fee {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 15rpx 25rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(24, 144, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-add-fee:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 6rpx 15rpx rgba(24, 144, 255, 0.4);
+}
+
+/* 预订须知样式 - 重新设计 */
+.notices-container {
+  width: 100%;
+}
+
+.notices-upload {
+  text-align: center;
+  padding: 25rpx;
+  border: 2rpx dashed #4b6e58;
+  border-radius: 20rpx;
+  margin-bottom: 25rpx;
+  background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+  transition: all 0.3s ease;
+}
+
+.notices-upload:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 15rpx rgba(75, 110, 88, 0.2);
+}
+
+.btn-add-notice {
+  background: linear-gradient(135deg, #4b6e58 0%, #5a7a65 100%);
+  color: white;
+  border: none;
+  border-radius: 30rpx;
+  padding: 18rpx 35rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(75, 110, 88, 0.3);
+}
+
+.notices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25rpx;
+}
+
+.notice-item {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 25rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.08);
+  border: 2rpx solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.notice-item:hover {
+  box-shadow: 0 8rpx 25rpx rgba(0, 0, 0, 0.12);
+}
+
+.notice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.notice-number {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #4b6e58;
+  background: linear-gradient(135deg, #4b6e58 0%, #5a7a65 100%);
+  color: white;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(75, 110, 88, 0.3);
+}
+
+.notice-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15rpx;
+  padding-top: 15rpx;
+  border-top: 2rpx solid #f0f0f0;
+}
+
+.btn-remove-notice {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 12rpx 25rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  box-shadow: 0 2rpx 8rpx rgba(255, 77, 79, 0.3);
+}
+
+/* 预订须知样式 - 修复输入框交互问题 */
+.notice-textarea {
+  width: 100%;
+  min-height: 180rpx;
+  padding: 20rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 15rpx;
+  font-size: 28rpx;
+  background: #fff !important;
+  box-sizing: border-box;
+  line-height: 1.6;
+  resize: none;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.notice-textarea:focus {
+  border-color: #4b6e58;
+  background: #fff !important;
+  box-shadow: 0 0 0 4rpx rgba(75, 110, 88, 0.1);
+}
+
+/* 确保容器不会遮挡输入框 */
+.itinerary-content,
+.notice-content {
+  position: relative;
+  z-index: 1;
+}
+
+.fee-item {
+  position: relative;
+  z-index: 1;
+}
+
+/* 移除可能影响交互的样式 */
+.itinerary-item,
+.notice-item,
+.fee-item {
+  overflow: visible !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .itinerary-textarea,
+  .notice-textarea {
+    min-height: 150rpx;
+    font-size: 26rpx;
+  }
+  
+  .fee-input {
+    font-size: 26rpx;
+    min-height: 50rpx;
+  }
+  
+  .btn-add-itinerary,
+  .btn-add-notice {
+    font-size: 26rpx;
+    padding: 15rpx 30rpx;
+  }
+  
+  .fee-category {
+    padding: 20rpx;
+  }
+  
+  .itinerary-item,
+  .notice-item {
+    padding: 20rpx;
+  }
+}
+
+/* 富文本编辑器样式 */
+.rich-editor {
+  width: 100%;
+  min-height: 200rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 15rpx;
+  background: white;
+  box-sizing: border-box;
+  margin-top: 15rpx;
+  font-size: 26rpx;
+}
+
+.rich-editor:focus {
+  border-color: #4b6e58;
+  box-shadow: 0 0 8rpx rgba(75, 110, 88, 0.2);
+}
+
+/* 行程安排样式优化 */
+.itinerary-container {
+  background: white;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.btn-add-itinerary {
+  background: linear-gradient(135deg, #4b6e58, #6b8e78);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+  width: auto;
+  display: inline-block;
+}
+
+.itinerary-item {
+  margin-bottom: 25rpx;
+  border: 2rpx solid #f0f0f0;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  background: #fafafa;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+}
+
+.day-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #4b6e58;
+}
+
+.btn-remove {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: none;
+  border-radius: 15rpx;
+  padding: 8rpx 16rpx;
+  font-size: 20rpx;
+  min-width: 60rpx;
+}
+
+/* 费用说明样式优化 */
+.fees-container {
+  background: white;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.fee-buttons {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.btn-add-fee {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 12rpx 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  flex: 1;
+  max-width: 200rpx;
+}
+
+.fee-item {
+  margin-bottom: 40rpx;
+  border: 2rpx solid #f0f0f0;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  background: #fafafa;
+}
+
+.fee-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.fee-type {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #17a2b8;
+}
+
+/* 预订须知样式优化 */
+.notices-container {
+  background: white;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.btn-add-notice {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+  width: auto;
+  display: inline-block;
+}
+
+.notice-item {
+  margin-bottom: 40rpx;
+  border: 2rpx solid #f0f0f0;
+  border-radius: 15rpx;
+  padding: 30rpx;
+  background: #fafafa;
+}
+
+.notice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.notice-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #28a745;
+}

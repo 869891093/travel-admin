@@ -1,0 +1,197 @@
+<!--detail.wxml-->
+<view class="container">
+  <!-- 产品图片轮播 -->
+  <view class="image-section">
+    <swiper class="product-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{500}}">
+      <swiper-item wx:for="{{product.images}}" wx:key="*this">
+        <image src="{{item}}" class="product-image" mode="aspectFill" />
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 产品基本信息 -->
+  <view class="product-info">
+    <view class="product-title">{{product.title}}</view>
+    <view class="product-desc">{{product.description}}</view>
+    <view class="product-tags">
+      <text class="tag" wx:for="{{product.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 价格日历 -->
+  <view class="price-calendar">
+    <view class="calendar-header">
+      <text class="calendar-title">价格日历</text>
+      <view class="price-type-switch">
+        <view class="switch-item {{priceType === 'adult' ? 'active' : ''}}" bindtap="switchPriceType" data-type="adult">
+          <text>成人价</text>
+        </view>
+        <view class="switch-item {{priceType === 'child' ? 'active' : ''}}" bindtap="switchPriceType" data-type="child">
+          <text>儿童价</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="calendar-content">
+      <view class="month-selector">
+        <text class="month-arrow" bindtap="prevMonth">‹</text>
+        <text class="month-text">{{currentMonthText}}</text>
+        <text class="month-arrow" bindtap="nextMonth">›</text>
+      </view>
+      
+      <view class="calendar-grid">
+        <view class="week-header">
+          <text wx:for="{{weekDays}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="calendar-days">
+          <view class="day-item {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isSelected ? 'selected' : ''}} {{item.isAvailable ? 'available' : 'unavailable'}}" 
+                wx:for="{{calendarDays}}" 
+                wx:key="date"
+                bindtap="selectDate"
+                data-date="{{item.date}}">
+            <text class="day-number">{{item.day}}</text>
+            <text class="day-price" wx:if="{{item.isAvailable}}">¥{{item.price}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 产品详情 -->
+  <view class="product-details">
+    <view class="detail-section">
+      <view class="section-title">行程安排</view>
+      <view class="itinerary-list">
+        <view class="itinerary-item" wx:for="{{product.itinerary}}" wx:key="index">
+          <view class="day-title">第{{index + 1}}天</view>
+          <rich-text class="day-content" nodes="{{item}}"></rich-text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 新增：产品详情图片展示 -->
+    <!-- 临时去掉条件判断，方便调试 -->
+    <view class="detail-images-section">
+      <view class="section-title">产品详情图片</view>
+      <view class="detail-images-list">
+        <block wx:if="{{product.detailImages && product.detailImages.length > 0}}">
+          <image wx:for="{{product.detailImages}}" 
+                 wx:key="*this" 
+                 src="{{item}}" 
+                 class="detail-image" 
+                 mode="widthFix" 
+                 bindtap="previewDetailImage" 
+                 data-url="{{item}}" />
+        </block>
+        <view wx:else class="no-images">
+          <text>暂无详情图片</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <view class="section-title">费用说明</view>
+      <view class="fee-list">
+        <view class="fee-item" wx:for="{{product.fees}}" wx:key="index">
+          <text class="fee-type">{{item.type}}</text>
+          <rich-text class="fee-desc" nodes="{{item.description}}"></rich-text>
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <view class="section-title">预订须知</view>
+      <view class="notice-list">
+        <view class="notice-item" wx:for="{{product.notices}}" wx:key="index">
+          <rich-text class="notice-text" nodes="{{item}}"></rich-text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退款规则卡片 -->
+  <view class="refund-rules-section">
+    <view class="section-title">
+      <text class="title-text">退款规则</text>
+    </view>
+    
+    <view class="refund-rules-card">
+      <!-- 游客主动解除合同 -->
+      <view class="refund-rule-block">
+        <view class="rule-title">
+          <text class="rule-title-text">游客主动解除合同（退团）</text>
+        </view>
+        <view class="rule-desc">
+          <text class="rule-desc-text">游客因个人原因取消行程时，退款需扣除"必要费用"+违约金，具体比例如下：</text>
+        </view>
+        
+        <view class="refund-table">
+          <view class="table-header">
+            <view class="table-cell header-cell">时间</view>
+            <view class="table-cell header-cell">退款比例</view>
+          </view>
+          <view class="table-row">
+            <view class="table-cell">行程开始前7日以上</view>
+            <view class="table-cell">退还全部旅游费用（不扣款）</view>
+          </view>
+          <view class="table-row">
+            <view class="table-cell">行程开始前6-4日</view>
+            <view class="table-cell">扣除旅游费用总额的20%</view>
+          </view>
+          <view class="table-row">
+            <view class="table-cell">行程开始前3-1日</view>
+            <view class="table-cell">扣除旅游费用总额的40%</view>
+          </view>
+          <view class="table-row">
+            <view class="table-cell">行程开始当日</view>
+            <view class="table-cell">扣除旅游费用总额的60%</view>
+          </view>
+        </view>
+        
+        <view class="rule-note">
+          <text class="note-icon">📅</text>
+          <text class="note-text">注："必要费用"指旅行社已支付且不可退还的费用（如机票、酒店定金等），违约金在此基础上按比例计算。</text>
+        </view>
+      </view>
+
+      <!-- 旅行社主动解除合同 -->
+      <view class="refund-rule-block">
+        <view class="rule-title">
+          <text class="rule-title-text">旅行社主动解除合同</text>
+        </view>
+        <view class="rule-desc">
+          <text class="rule-desc-text">若旅行社取消行程，除退还全部费用外，还需支付违约金：</text>
+        </view>
+        
+        <view class="refund-table">
+          <view class="table-header">
+            <view class="table-cell header-cell">时间</view>
+            <view class="table-cell header-cell">违约金比例</view>
+          </view>
+          <view class="table-row">
+            <view class="table-cell">出发前7-4日</view>
+            <view class="table-cell">支付旅游费用总额10%的违约金</view>
+          </view>
+          <view class="table-row">
+            <view class="table-cell">出发前3-1日</view>
+            <view class="table-cell">支付15%的违约金</view>
+          </view>
+          <view class="table-row">
+            <view class="table-cell">出发当日</view>
+            <view class="table-cell">支付20%的违约金</view>
+          </view>
+        </view>
+
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="price-info">
+      <text class="price-label">成人最低起价</text>
+      <text class="price-value">¥{{product.adultPrice}}</text>
+    </view>
+    <button class="btn-primary" bindtap="goToBooking">立即预订</button>
+  </view>
+</view>

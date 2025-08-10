@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/orders/orders",
+    "pages/order-detail/order-detail",
+    "pages/product/detail",
+    "pages/product/booking",
+    "pages/region/region",
+    "pages/profile/profile",
+    "pages/admin/admin",
+    "pages/admin/product-edit/product-edit",
+    "pages/admin/banner-edit/banner-edit",
+    "pages/admin-refund/admin-refund",
+    "pages/north-xinjiang/north-xinjiang",
+    "pages/south-xinjiang/south-xinjiang",
+    "pages/hiking/hiking",
+    "pages/custom/custom"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4b6e58",
+    "navigationBarTitleText": "跟团游",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4b6e58",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/icons/home.png",
+        "selectedIconPath": "images/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/region/region",
+        "text": "区域导航",
+        "iconPath": "images/icons/business.png",
+        "selectedIconPath": "images/icons/business-active.png"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "我的订单",
+        "iconPath": "images/icons/usercenter.png",
+        "selectedIconPath": "images/icons/usercenter-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/icons/usercenter.png",
+        "selectedIconPath": "images/icons/usercenter-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

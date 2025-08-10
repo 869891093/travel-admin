@@ -1,0 +1,59 @@
+<!--custom.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <view class="header-content">
+      <text class="page-title">定制</text>
+      <text class="page-subtitle">为您量身打造专属旅行方案</text>
+    </view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <view class="search-box">
+      <icon type="search" size="16" color="#999"></icon>
+      <input 
+        placeholder="搜索定制服务、方案" 
+        class="search-input" 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput" 
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
+      />
+      <view class="search-actions">
+        <text class="search-btn" bindtap="onSearchConfirm" wx:if="{{searchKeyword}}">搜索</text>
+        <text class="clear-btn" bindtap="clearSearch" wx:if="{{searchKeyword}}">清除</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 产品列表 -->
+  <view class="product-list">
+    <view class="product-card" wx:for="{{products}}" wx:key="id" bindtap="goToDetail" data-id="{{item._id}}">
+      <image src="{{item.coverImage}}" class="product-image" mode="aspectFill" />
+      <view class="product-info">
+        <view class="product-title">{{item.title}}</view>
+        <view class="product-desc">{{item.description}}</view>
+        <view class="product-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">{{tag}}</text>
+        </view>
+        <view class="product-price">
+          <text class="price-label">成人最低起价</text>
+          <text class="price-value">¥{{item.adultPrice}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore}}">
+    <button class="btn-primary" bindtap="loadMore" loading="{{loading}}">
+      {{loading ? '加载中...' : '加载更多'}}
+    </button>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && products.length === 0}}">
+    <text class="empty-text">暂无定制相关产品</text>
+  </view>
+</view> 

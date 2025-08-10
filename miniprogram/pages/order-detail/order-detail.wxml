@@ -1,0 +1,138 @@
+<!--order-detail.wxml-->
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 订单详情 -->
+  <view class="order-detail" wx:if="{{!loading && order}}">
+    <!-- 头部导航 -->
+    <view class="header">
+      <view class="back-btn" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <text class="header-title">订单详情</text>
+      <view class="header-right"></view>
+    </view>
+
+    <!-- 订单状态卡片 -->
+    <view class="status-card">
+      <view class="status-info">
+        <text class="status-text">{{order.statusText}}</text>
+        <text class="order-no">订单号：{{order.orderNo}}</text>
+      </view>
+      <view class="copy-btn" bindtap="copyOrderNo">
+        <text class="copy-icon">📋</text>
+      </view>
+    </view>
+
+    <!-- 产品信息 -->
+    <view class="section-card">
+      <view class="section-title">
+        <text class="title-icon">📦</text>
+        <text>产品信息</text>
+      </view>
+      <view class="product-info">
+        <image src="{{order.productImage}}" class="product-image" mode="aspectFill" />
+        <view class="product-details">
+          <text class="product-title">{{order.productTitle}}</text>
+          <view class="travel-date">
+            <text class="label">出行日期：</text>
+            <text class="value">{{order.travelDate}}</text>
+          </view>
+          <view class="travelers">
+            <text class="label">出行人数：</text>
+            <text class="value">成人 {{order.adultCount}} 人</text>
+            <text class="value" wx:if="{{order.childCount > 0}}">儿童 {{order.childCount}} 人</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系信息 -->
+    <view class="section-card">
+      <view class="section-title">
+        <text class="title-icon">👤</text>
+        <text>联系信息</text>
+      </view>
+      <view class="contact-info">
+        <view class="info-item">
+          <text class="label">联系人：</text>
+          <text class="value">{{order.contactName}}</text>
+        </view>
+        <view class="info-item">
+          <text class="label">手机号：</text>
+          <text class="value">{{order.contactPhone}}</text>
+        </view>
+        <view class="info-item" wx:if="{{order.specialRequirements}}">
+          <text class="label">特殊要求：</text>
+          <text class="value">{{order.specialRequirements}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 费用明细 -->
+    <view class="section-card">
+      <view class="section-title">
+        <text class="title-icon">💰</text>
+        <text>费用明细</text>
+      </view>
+      <view class="price-details">
+        <view class="price-item">
+          <text class="label">成人费用：</text>
+          <text class="value">¥{{order.adultPrice}} × {{order.adultCount}} 人</text>
+          <text class="subtotal">¥{{order.adultPrice * order.adultCount}}</text>
+        </view>
+        <view class="price-item" wx:if="{{order.childCount > 0}}">
+          <text class="label">儿童费用：</text>
+          <text class="value">¥{{order.childPrice}} × {{order.childCount}} 人</text>
+          <text class="subtotal">¥{{order.childPrice * order.childCount}}</text>
+        </view>
+        <view class="price-divider"></view>
+        <view class="price-total">
+          <text class="label">订单总价：</text>
+          <text class="total-value">¥{{order.totalPrice}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单时间 -->
+    <view class="section-card">
+      <view class="section-title">
+        <text class="title-icon">⏰</text>
+        <text>订单时间</text>
+      </view>
+      <view class="time-info">
+        <view class="time-item">
+          <text class="label">创建时间：</text>
+          <text class="value">{{order.createTime}}</text>
+        </view>
+        <view class="time-item" wx:if="{{order.paymentTime}}">
+          <text class="label">支付时间：</text>
+          <text class="value">{{order.paymentTime}}</text>
+        </view>
+        <view class="time-item" wx:if="{{order.updateTime}}">
+          <text class="label">更新时间：</text>
+          <text class="value">{{order.updateTime}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons" wx:if="{{order.status === 'paid'}}">
+      <button class="btn-refund" bindtap="requestRefund">
+        <text class="btn-icon">💰</text>
+        <text>申请退款</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-container" wx:if="{{!loading && !order}}">
+    <text class="error-icon">❌</text>
+    <text class="error-text">订单不存在或已被删除</text>
+    <button class="btn-primary" bindtap="goBack">返回</button>
+  </view>
+</view>

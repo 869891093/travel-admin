@@ -1,0 +1,50 @@
+<!--region.wxml-->
+<view class="container">
+
+  <!-- 主要内容区域 -->
+  <view class="main-content">
+    <!-- 左侧区域导航 -->
+    <view class="sidebar">
+      <view class="nav-item {{selectedRegion === '热门推荐' ? 'active' : ''}}" bindtap="selectRegion" data-region="热门推荐">
+        <text class="nav-text">热门推荐</text>
+      </view>
+      <view class="nav-item {{selectedRegion === item ? 'active' : ''}}" 
+            wx:for="{{regionList}}" 
+            wx:key="*this" 
+            bindtap="selectRegion" 
+            data-region="{{item}}">
+        <text class="nav-text">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 右侧产品列表 -->
+    <view class="content-area">
+      <!-- 当前选中区域指示器 -->
+      <view class="region-indicator" wx:if="{{selectedRegion}}">
+        <view class="region-badge">{{selectedRegion}}</view>
+      </view>
+
+      <!-- 产品列表 -->
+      <view class="product-list">
+        <view class="product-card" wx:for="{{regionProducts}}" wx:key="id" bindtap="goToDetail" data-id="{{item._id}}">
+          <image src="{{item.coverImage}}" class="product-image" mode="aspectFill" />
+          
+          <view class="product-info">
+            <view class="product-title">{{item.title}}</view>
+            <view class="product-tags">
+              <text class="tag" wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag">{{tag}}</text>
+            </view>
+            <view class="product-price">
+              <text class="price-value">¥{{item.adultPrice}}/人</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{regionProducts.length === 0 && selectedRegion}}">
+        <text class="empty-text">该区域暂无产品</text>
+      </view>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,9 @@
+{
+  "name": "batchDeleteOrders",
+  "version": "1.0.0",
+  "description": "批量删除订单云函数",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

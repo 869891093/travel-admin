@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "openapi": [
+      "cloudPay.unifiedOrder",
+      "cloudPay.orderQuery"
+    ]
+  },
+  "triggers": [
+    {
+      "name": "paymentCallback",
+      "type": "http",
+      "config": {
+        "timeout": 5,
+        "envVariables": {},
+        "runtime": "Nodejs16.13",
+        "memorySize": 256
+      }
+    }
+  ]
+}

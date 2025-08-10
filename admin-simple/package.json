@@ -1,0 +1,32 @@
+{
+  "name": "travel-admin-simple",
+  "version": "1.0.0",
+  "description": "旅游小程序管理后台 - 简化版",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "install-deps": "npm install",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": [
+    "travel",
+    "miniprogram",
+    "admin",
+    "management",
+    "wechat"
+  ],
+  "author": "Travel Admin",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

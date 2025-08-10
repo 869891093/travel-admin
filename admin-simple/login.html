@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录 - 旅游小程序管理后台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-plane"></i>
+                    <h1>旅游管理后台</h1>
+                </div>
+                <p class="subtitle">管理员登录</p>
+            </div>
+
+            <div class="login-content">
+                <!-- 登录方式选择 -->
+                <div class="login-methods">
+                    <button class="method-btn active" data-method="openid" type="button">
+                        <i class="fas fa-key"></i>
+                        <span>OpenID登录</span>
+                    </button>
+                    <button class="method-btn" data-method="qrcode" type="button">
+                        <i class="fas fa-qrcode"></i>
+                        <span>扫码登录</span>
+                    </button>
+                </div>
+
+                <!-- OpenID登录表单 -->
+                <div id="openidLogin" class="login-form active">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="openid">
+                                <i class="fas fa-user"></i>
+                                管理员OpenID
+                            </label>
+                            <input type="text" id="openid" name="openid" placeholder="请输入您的OpenID" required>
+                            <small class="help-text">OpenID可在小程序个人中心查看</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adminKey">
+                                <i class="fas fa-lock"></i>
+                                管理密钥（可选）
+                            </label>
+                            <input type="password" id="adminKey" name="adminKey" placeholder="管理密钥（如有设置）">
+                            <small class="help-text">如果设置了管理密钥，请输入</small>
+                        </div>
+
+                        <button type="submit" class="login-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            登录管理后台
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 扫码登录 -->
+                <div id="qrcodeLogin" class="login-form">
+                    <div class="qrcode-container">
+                        <div class="qrcode-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                            <p>扫码登录功能开发中</p>
+                            <small>请使用OpenID登录</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 帮助信息 -->
+                <div class="login-help">
+                    <h4><i class="fas fa-question-circle"></i> 如何获取OpenID？</h4>
+                    <ol>
+                        <li>打开旅游小程序</li>
+                        <li>进入"个人中心"页面</li>
+                        <li>查看并复制您的OpenID</li>
+                        <li>在上方输入框中粘贴OpenID</li>
+                    </ol>
+                    
+                    <div class="admin-info">
+                        <h4><i class="fas fa-info-circle"></i> 管理员权限说明</h4>
+                        <ul>
+                            <li><strong>超级管理员</strong>：拥有所有权限，可管理其他管理员</li>
+                            <li><strong>普通管理员</strong>：可管理产品、订单、轮播图等</li>
+                            <li>需要超级管理员在小程序中添加您为管理员</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login-footer">
+                <p>&copy; 2025 旅游小程序管理系统</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载提示 -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>验证中...</p>
+        </div>
+    </div>
+
+    <!-- 消息提示 -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="js/api-simple.js"></script>
+    <script>
+        // 简化的登录逻辑，直接在页面中实现
+        let loginManager = null;
+
+        // 等待页面和API加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成');
+
+            // 等待API加载
+            function waitForAPI() {
+                if (typeof api !== 'undefined') {
+                    console.log('API已加载，初始化登录功能');
+                    initLogin();
+                } else {
+                    console.log('等待API加载...');
+                    setTimeout(waitForAPI, 100);
+                }
+            }
+            waitForAPI();
+        });
+
+        function initLogin() {
+            // 绑定表单提交事件
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+                console.log('登录表单事件已绑定');
+            }
+
+            // 绑定切换按钮事件
+            document.querySelectorAll('.method-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const method = this.getAttribute('data-method');
+                    switchMethod(method);
+                });
+            });
+        }
+
+        function switchMethod(method) {
+            // 更新按钮状态
+            document.querySelectorAll('.method-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-method="${method}"]`).classList.add('active');
+
+            // 切换表单显示
+            document.querySelectorAll('.login-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(`${method}Login`).classList.add('active');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            console.log('开始处理登录');
+
+            const formData = new FormData(event.target);
+            const openid = formData.get('openid').trim();
+            const adminKey = formData.get('adminKey').trim();
+
+            if (!openid) {
+                showMessage('请输入OpenID', 'error');
+                return;
+            }
+
+            if (openid.length < 20) {
+                showMessage('OpenID格式不正确，请检查输入', 'error');
+                return;
+            }
+
+            showLoading('验证管理员权限...');
+
+            try {
+                console.log('调用云函数验证权限');
+
+                // 临时解决方案：先检查管理员表
+                let result;
+                try {
+                    result = await api.callCloudFunction('httpAPI', {
+                        action: 'checkWebAdmin',
+                        openid: openid,
+                        adminKey: adminKey
+                    });
+                } catch (error) {
+                    console.log('checkWebAdmin不可用，使用备用方案');
+                    // 备用方案：直接查询管理员表
+                    result = await api.callCloudFunction('httpAPI', {
+                        action: 'query',
+                        collection: 'admins',
+                        where: {
+                            openid: openid,
+                            status: 'active'
+                        }
+                    });
+
+                    if (result.success && result.data && result.data.length > 0) {
+                        const adminData = result.data[0];
+                        result = {
+                            success: true,
+                            isAdmin: true,
+                            adminInfo: {
+                                openid: adminData.openid,
+                                name: adminData.name || '管理员',
+                                role: adminData.role || 'admin',
+                                permissions: adminData.permissions || ['products', 'orders', 'banners', 'refunds']
+                            }
+                        };
+                    } else {
+                        result = {
+                            success: false,
+                            message: '该OpenID不是管理员，请联系超级管理员添加权限'
+                        };
+                    }
+                }
+
+                console.log('验证结果:', result);
+
+                if (result.success && (result.isAdmin || (result.data && result.data.length > 0))) {
+                    const adminInfo = {
+                        openid: openid,
+                        name: result.adminInfo.name || '管理员',
+                        role: result.adminInfo.role || 'admin',
+                        permissions: result.adminInfo.permissions || [],
+                        isSuperAdmin: result.adminInfo.role === 'super_admin',
+                        loginTime: new Date().toISOString()
+                    };
+
+                    localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+                    showMessage(`登录成功！欢迎 ${adminInfo.name}`, 'success');
+
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showMessage(result.message || '权限验证失败，请确认您是否为管理员', 'error');
+                }
+
+            } catch (error) {
+                console.error('登录失败:', error);
+                showMessage('登录失败: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showLoading(message) {
+            const overlay = document.getElementById('loadingOverlay');
+            const text = overlay.querySelector('p');
+            text.textContent = message;
+            overlay.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = 'none';
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message message-${type}`;
+            messageEl.innerHTML = `
+                <div class="message-content">
+                    <i class="fas fa-${getMessageIcon(type)}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="message-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            container.appendChild(messageEl);
+
+            setTimeout(() => {
+                if (messageEl.parentElement) {
+                    messageEl.remove();
+                }
+            }, 5000);
+        }
+
+        function getMessageIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                warning: 'exclamation-triangle',
+                info: 'info-circle'
+            };
+            return icons[type] || 'info-circle';
+        }
+    </script>
+
+    <style>
+        .message {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message-success { border-left: 4px solid #28a745; }
+        .message-error { border-left: 4px solid #dc3545; }
+        .message-warning { border-left: 4px solid #ffc107; }
+        .message-info { border-left: 4px solid #17a2b8; }
+
+        .message-success i { color: #28a745; }
+        .message-error i { color: #dc3545; }
+        .message-warning i { color: #ffc107; }
+        .message-info i { color: #17a2b8; }
+
+        .message-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message-close:hover {
+            color: #495057;
+        }
+    </style>
+</body>
+</html>

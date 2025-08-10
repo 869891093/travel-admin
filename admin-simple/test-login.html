@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>管理员登录测试</h1>
+    
+    <form id="testForm">
+        <div class="form-group">
+            <label for="openid">OpenID:</label>
+            <input type="text" id="openid" name="openid" placeholder="请输入OpenID" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="adminKey">管理密钥（可选）:</label>
+            <input type="password" id="adminKey" name="adminKey" placeholder="如有设置请输入">
+        </div>
+        
+        <button type="submit">测试登录</button>
+    </form>
+    
+    <div id="result"></div>
+
+    <script src="js/api-simple.js"></script>
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const resultDiv = document.getElementById('result');
+            const openid = document.getElementById('openid').value.trim();
+            const adminKey = document.getElementById('adminKey').value.trim();
+            
+            if (!openid) {
+                resultDiv.innerHTML = '<div class="error">请输入OpenID</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div>验证中...</div>';
+            
+            try {
+                console.log('开始验证，OpenID:', openid);
+                console.log('API对象:', typeof api);
+                
+                if (typeof api === 'undefined') {
+                    throw new Error('API对象未定义');
+                }
+                
+                const result = await api.callCloudFunction('httpAPI', {
+                    action: 'checkWebAdmin',
+                    openid: openid,
+                    adminKey: adminKey
+                });
+                
+                console.log('验证结果:', result);
+                
+                if (result.success && result.isAdmin) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>登录成功！</h3>
+                            <p><strong>姓名:</strong> ${result.adminInfo.name}</p>
+                            <p><strong>角色:</strong> ${result.adminInfo.role === 'super_admin' ? '超级管理员' : '普通管理员'}</p>
+                            <p><strong>权限:</strong> ${result.adminInfo.permissions.join(', ')}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">登录失败: ${result.message || '权限验证失败'}</div>`;
+                }
+                
+            } catch (error) {
+                console.error('登录测试失败:', error);
+                resultDiv.innerHTML = `<div class="error">登录测试失败: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

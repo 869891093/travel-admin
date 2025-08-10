@@ -1,0 +1,9 @@
+{
+  "name": "generateUserId",
+  "version": "1.0.0",
+  "description": "生成唯一用户ID",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+} 

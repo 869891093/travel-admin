@@ -1,0 +1,83 @@
+/**app.wxss**/
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+}
+
+/* 主题色变量 */
+page {
+  --primary-color: #4b6e58;
+  --primary-light: #6b8e78;
+  --primary-dark: #2b4e38;
+  --text-color: #333333;
+  --text-light: #666666;
+  --text-lighter: #999999;
+  --bg-color: #f6f6f6;
+  --white: #ffffff;
+  --border-color: #e5e5e5;
+}
+
+/* 通用样式 */
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.margin-top {
+  margin-top: 20rpx;
+}
+
+.margin-bottom {
+  margin-bottom: 20rpx;
+}
+
+.padding {
+  padding: 20rpx;
+}
+
+.card {
+  background: var(--white);
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+  margin: 20rpx;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+}
+
+.btn-primary:active {
+  background: var(--primary-dark);
+}

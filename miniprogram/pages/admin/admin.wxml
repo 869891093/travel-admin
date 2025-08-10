@@ -1,0 +1,338 @@
+<!--pages/admin/admin.wxml-->
+<view class="container">
+  <!-- 在页面顶部添加权限信息显示 -->
+  <view class="permission-info" wx:if="{{isAdmin}}">
+    <text class="permission-text">
+      当前权限: {{isSuperAdmin ? '超级管理员' : '管理员'}}
+    </text>
+  </view>
+  <!-- 导航菜单 -->
+  <view class="nav-menu">
+    <view class="nav-item {{currentPage === 'products' ? 'active' : ''}}"
+          bindtap="switchPage"
+          data-page="products">
+      <text>产品管理</text>
+    </view>
+    <view class="nav-item {{currentPage === 'banners' ? 'active' : ''}}"
+          bindtap="switchPage"
+          data-page="banners">
+      <text>轮播图管理</text>
+    </view>
+    <view class="nav-item {{currentPage === 'orders' ? 'active' : ''}}"
+          bindtap="switchPage"
+          data-page="orders">
+      <text>订单管理</text>
+    </view>
+    <view class="nav-item {{currentPage === 'refunds' ? 'active' : ''}}"
+          bindtap="switchPage"
+          data-page="refunds">
+      <text>退款管理</text>
+    </view>
+  </view>
+
+  <!-- 管理员管理按钮 -->
+  <view class="admin-manage-section" wx:if="{{isSuperAdmin}}">
+    <button class="admin-manage-btn" bindtap="showAdminManagement">管理员管理</button>
+  </view>
+
+  <!-- 数据库操作区域 - 临时去掉权限检查，方便调试 -->
+  <view class="database-section">
+    <view class="section-title">数据库操作</view>
+    <view class="database-actions">
+      <button class="btn-database" bindtap="initDatabase" loading="{{initLoading}}">初始化数据库</button>
+      <button class="btn-database btn-danger" bindtap="clearDatabase" loading="{{clearLoading}}">清理数据库</button>
+    </view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content-area">
+    <!-- 产品管理 -->
+    <view wx:if="{{currentPage === 'products'}}" class="page-content">
+      <view class="header-actions">
+        <text class="page-title">产品管理</text>
+        <button class="btn-primary" bindtap="addProduct">添加产品</button>
+      </view>
+      
+      <view class="data-list">
+        <view class="data-item" wx:for="{{products}}" wx:key="_id">
+          <image class="item-image" src="{{item.coverImage}}" mode="aspectFill"></image>
+          <view class="item-info">
+            <text class="item-title">{{item.title}}</text>
+            <!-- 价格和状态同行显示 -->
+            <view class="item-price-row">
+              <text class="item-price">¥{{item.adultPrice}}</text>
+              <text class="status-tag {{item.status === 'active' ? 'status-active' : 'status-inactive'}}">
+                {{item.status === 'active' ? '上架' : '下架'}}
+              </text>
+            </view>
+            <!-- 热门推荐标签 -->
+            <view class="item-status-tags" wx:if="{{item.isHot}}">
+              <text class="hot-label">🔥 热门推荐</text>
+              <text class="hot-sort">排序: {{item.hotSort || 0}}</text>
+            </view>
+          </view>
+          <view class="item-actions">
+            <button class="btn-secondary" bindtap="editProduct" data-id="{{item._id}}">编辑</button>
+            <button class="btn-danger" bindtap="deleteProduct" data-id="{{item._id}}">删除</button>
+            <button class="btn-status-toggle {{item.status === 'active' ? 'btn-danger' : 'btn-primary'}}" 
+                    bindtap="simpleToggleStatus" 
+                    data-id="{{item._id}}" 
+                    data-status="{{item.status}}">
+              {{item.status === 'active' ? '下架' : '上架'}}
+            </button>
+            <button class="btn-hot" bindtap="toggleHot" data-id="{{item._id}}" data-hot="{{item.isHot}}">
+              {{item.isHot ? '取消热门' : '设为热门'}}
+            </button>
+          </view>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:if="{{products.length === 0 && !loading}}">
+        <text>暂无产品数据</text>
+      </view>
+    </view>
+
+    <!-- 订单管理 -->
+    <view wx:if="{{currentPage === 'orders'}}" class="page-content">
+      <view class="page-header">
+        <text class="page-title">订单管理</text>
+      </view>
+
+      <!-- 搜索区域 -->
+      <view class="search-section">
+        <view class="search-bar">
+          <input class="search-input"
+                 placeholder="请输入订单号搜索"
+                 value="{{searchOrderNo}}"
+                 bindinput="onSearchOrderInput" />
+          <button class="search-btn" bindtap="searchOrders">搜索</button>
+          <button class="clear-btn" bindtap="clearSearch" wx:if="{{searchOrderNo}}">清空</button>
+        </view>
+      </view>
+
+      <!-- 批量操作区域 -->
+      <view class="batch-actions" wx:if="{{orders.length > 0}}">
+        <view class="batch-select">
+          <view class="select-all" bindtap="toggleSelectAll">
+            <view class="custom-checkbox {{selectAll ? 'checked' : ''}}">
+              <text class="checkbox-icon" wx:if="{{selectAll}}">✓</text>
+            </view>
+            <text>全选</text>
+          </view>
+          <text class="selected-count" wx:if="{{selectedOrders.length > 0}}">
+            已选择 {{selectedOrders.length}} 项
+          </text>
+        </view>
+        <view class="batch-buttons" wx:if="{{showBatchActions}}">
+          <button class="batch-delete-btn" bindtap="batchDeleteOrders">批量删除</button>
+        </view>
+      </view>
+
+      <!-- 订单列表 -->
+      <view class="data-list" wx:if="{{orders.length > 0}}">
+        <view class="order-item" wx:for="{{orders}}" wx:key="_id">
+          <view class="order-checkbox" bindtap="toggleSelectOrder" data-id="{{item._id}}">
+            <view class="simple-checkbox {{selectedOrders.indexOf(item._id) > -1 ? 'selected' : 'unselected'}}">
+              ✓
+            </view>
+          </view>
+          <view class="order-info" bindtap="viewOrderDetail" data-id="{{item._id}}">
+            <view class="order-header">
+              <text class="order-no">订单号: {{item.orderNo}}</text>
+              <text class="order-status status-{{item.status}}">{{item.statusText}}</text>
+            </view>
+            <view class="order-details">
+              <text class="order-product">{{item.productTitle}}</text>
+              <text class="order-price">¥{{item.totalPrice}}</text>
+            </view>
+            <view class="order-meta">
+              <text class="order-time">{{item.createTime}}</text>
+              <text class="order-user">用户: {{item.contactName || '未知'}}</text>
+            </view>
+          </view>
+          <view class="order-actions">
+            <button class="btn-detail" bindtap="viewOrderDetail" data-id="{{item._id}}">详情</button>
+            <button class="btn-delete" bindtap="deleteOrder" data-id="{{item._id}}">删除</button>
+          </view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{orders.length === 0 && !loading}}">
+        <text class="empty-icon">📋</text>
+        <text class="empty-text">
+          {{searchOrderNo ? '未找到匹配的订单' : '暂无订单数据'}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 退款管理 -->
+    <view wx:if="{{currentPage === 'refunds'}}" class="page-content">
+      <view class="page-header">
+        <text class="page-title">退款管理</text>
+        <button class="refresh-btn" bindtap="refreshRefunds">刷新</button>
+      </view>
+
+      <!-- 状态筛选 -->
+      <view class="filter-section">
+        <view class="filter-item">
+          <text class="filter-label">状态筛选:</text>
+          <picker mode="selector"
+                  range="{{refundStatusOptions}}"
+                  range-key="text"
+                  value="{{refundStatusIndex}}"
+                  bindchange="onRefundStatusChange">
+            <view class="picker-value">{{refundStatusOptions[refundStatusIndex].text}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 退款列表 -->
+      <view class="data-list" wx:if="{{refunds.length > 0}}">
+        <view class="refund-item" wx:for="{{refunds}}" wx:key="_id">
+          <!-- 退款信息区域 -->
+          <view class="refund-info" bindtap="viewRefundDetail" data-id="{{item._id}}">
+            <view class="refund-header">
+              <text class="refund-id">退款单号: {{item.outRefundNo || item.refundId || item._id}}</text>
+              <text class="refund-status status-{{item.status}}">{{item.statusText}}</text>
+            </view>
+            <view class="refund-details">
+              <text class="refund-order">订单号: {{item.orderNo || item.orderId}}</text>
+              <text class="refund-amount">退款金额: ¥{{item.amount}}</text>
+            </view>
+            <view class="refund-reason">
+              <text class="reason-label">退款原因:</text>
+              <text class="reason-text">{{item.reason}}</text>
+            </view>
+            <view class="refund-meta">
+              <text class="refund-time">申请时间: {{item.createTime}}</text>
+            </view>
+          </view>
+
+          <!-- 操作按钮区域 - 放在卡片下方 -->
+          <view class="refund-actions-bottom">
+            <button class="btn-detail" bindtap="viewRefundDetail" data-id="{{item._id}}">查看详情</button>
+            <button class="btn-approve"
+                    bindtap="approveRefund"
+                    data-id="{{item._id}}"
+                    wx:if="{{item.status === 'pending'}}">审核通过</button>
+            <button class="btn-reject"
+                    bindtap="rejectRefund"
+                    data-id="{{item._id}}"
+                    wx:if="{{item.status === 'pending'}}">审核拒绝</button>
+          </view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{refunds.length === 0 && !loading}}">
+        <text class="empty-icon">💰</text>
+        <text class="empty-text">暂无退款申请</text>
+      </view>
+    </view>
+
+    <!-- 轮播图管理 -->
+    <view wx:if="{{currentPage === 'banners'}}" class="page-content">
+      <view class="page-header">
+        <text class="page-title">轮播图管理</text>
+        <button class="add-btn" bindtap="addBanner">添加轮播图</button>
+      </view>
+      
+      <view class="data-list" wx:if="{{banners.length > 0}}">
+        <view class="banner-item" wx:for="{{banners}}" wx:key="_id">
+          <image src="{{item.imageUrl}}" class="banner-image" mode="aspectFill" />
+          <view class="banner-info">
+            <text class="banner-title">{{item.title}}</text>
+            <text class="banner-desc">{{item.desc}}</text>
+            <view class="banner-meta">
+              <text class="banner-sort">排序: {{item.sort}}</text>
+              <text class="banner-status {{item.status === 'active' ? '' : 'inactive'}}">
+                {{item.status === 'active' ? '启用' : '禁用'}}
+              </text>
+            </view>
+            <view class="banner-actions">
+              <button class="btn-secondary" bindtap="editBanner" data-id="{{item._id}}">编辑</button>
+              <button class="btn-danger" bindtap="deleteBanner" data-id="{{item._id}}">删除</button>
+              <button class="btn-move" bindtap="moveBannerUp" data-index="{{index}}" wx:if="{{index > 0}}">上移</button>
+              <button class="btn-move" bindtap="moveBannerDown" data-index="{{index}}" wx:if="{{index < banners.length - 1}}">下移</button>
+              <button class="btn-status-toggle {{item.status === 'active' ? 'btn-danger' : 'btn-primary'}}" 
+                      bindtap="toggleBannerStatus" 
+                      data-id="{{item._id}}" 
+                      data-status="{{item.status}}">
+                {{item.status === 'active' ? '禁用' : '启用'}}
+              </button>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:if="{{banners.length === 0 && !loading}}">
+        <text>暂无轮播图数据</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 管理员管理弹窗 -->
+  <view class="admin-modal" wx:if="{{showAdminManage}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">管理员管理</text>
+        <text class="modal-close" bindtap="hideAdminManagement">×</text>
+      </view>
+      
+      <!-- 添加管理员表单 -->
+      <view class="add-admin-form">
+        <view class="form-item">
+          <text class="form-label">用户OpenID:</text>
+          <input class="form-input" 
+                 placeholder="请输入用户openid" 
+                 value="{{newAdmin.openid}}"
+                 bindinput="onAdminOpenidInput" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">姓名:</text>
+          <input class="form-input" 
+                 placeholder="请输入姓名" 
+                 value="{{newAdmin.name}}"
+                 bindinput="onAdminNameInput" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">手机号:</text>
+          <input class="form-input" 
+                 placeholder="请输入手机号" 
+                 value="{{newAdmin.phone}}"
+                 bindinput="onAdminPhoneInput" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">角色:</text>
+          <picker mode="selector" 
+                  range="{{['admin', 'super_admin']}}" 
+                  value="{{newAdmin.role === 'super_admin' ? 1 : 0}}"
+                  bindchange="onAdminRoleChange">
+            <view class="picker-value">{{newAdmin.role === 'super_admin' ? '超级管理员' : '管理员'}}</view>
+          </picker>
+        </view>
+        <button class="add-admin-btn" bindtap="addAdmin">添加管理员</button>
+      </view>
+      
+      <!-- 管理员列表 -->
+      <view class="admin-list">
+        <text class="list-title">当前管理员</text>
+        <view class="admin-item" wx:for="{{admins}}" wx:key="openid">
+          <view class="admin-info">
+            <text class="admin-name">{{item.name || '未设置姓名'}}</text>
+            <text class="admin-role">{{item.role === 'super_admin' ? '超级管理员' : '管理员'}}</text>
+            <text class="admin-openid">{{item.openid}}</text>
+          </view>
+          <button class="remove-admin-btn" 
+                  bindtap="removeAdmin" 
+                  data-openid="{{item.openid}}"
+                  wx:if="{{item.openid !== currentOpenid}}">移除</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view> 

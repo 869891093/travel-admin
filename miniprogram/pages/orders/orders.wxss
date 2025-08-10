@@ -1,0 +1,475 @@
+/* orders.wxss */
+.container {
+  padding: 0;
+  background: linear-gradient(135deg, #4b6e58 0%, #6b8e78 100%);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 测试按钮区域 */
+.test-section {
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 10rpx;
+}
+
+.test-section .btn-primary {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.test-section .btn-primary:active {
+  transform: translateY(-1rpx);
+  box-shadow: 0 6rpx 16rpx rgba(255, 107, 107, 0.4);
+}
+
+/* 状态切换标签 */
+.status-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+  flex-shrink: 0;
+  backdrop-filter: blur(10rpx);
+  border-radius: 0 0 20rpx 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 25rpx 0;
+  font-size: 28rpx;
+  color: var(--text-light);
+  position: relative;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tab-item.active {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background: var(--primary-color);
+  border-radius: 2rpx;
+}
+
+/* 管理入口 */
+.admin-entry {
+  padding: 20rpx;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-btn {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(245, 18, 2, 0.3);
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.admin-btn:active {
+  transform: translateY(-1rpx);
+  box-shadow: 0 6rpx 16rpx rgba(233, 41, 2, 0.4);
+}
+
+/* 订单列表容器 */
+.order-list {
+  background: transparent;
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20rpx 20rpx 20rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.order-item {
+  margin-bottom: 24rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.order-item:active {
+  transform: translateY(-2rpx);
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 订单头部 - 重新设计 */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 24rpx 16rpx 24rpx;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.order-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 24rpx;
+  right: 24rpx;
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.order-number {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.order-status {
+  font-size: 24rpx;
+  font-weight: bold;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5rpx);
+}
+
+.order-status.pending {
+  color: #fff3cd;
+  background: rgba(255, 193, 7, 0.2);
+}
+
+.order-status.confirmed {
+  color: #d4edda;
+  background: rgba(40, 167, 69, 0.2);
+}
+
+.order-status.completed {
+  color: #d1ecf1;
+  background: rgba(23, 162, 184, 0.2);
+}
+
+.order-status.cancelled {
+  color: #f8d7da;
+  background: rgba(220, 53, 69, 0.2);
+}
+
+/* 订单内容 - 全新布局 */
+.order-content {
+  padding: 24rpx;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 产品图片区域 */
+.product-image-section {
+  display: flex;
+  margin-bottom: 20rpx;
+  width: 100%;
+}
+
+.product-image {
+  width: 160rpx;
+  height: 120rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.product-info {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 0; /* 确保flex: 1生效 */
+}
+
+.product-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: var(--text-color);
+  line-height: 1.4;
+  margin-bottom: 8rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 行程信息网格 */
+.travel-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+  width: 100%;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: var(--text-light);
+}
+
+.info-item .icon {
+  width: 24rpx;
+  height: 24rpx;
+  margin-right: 8rpx;
+  opacity: 0.6;
+}
+
+.travel-date {
+  grid-column: 1 / -1;
+}
+
+.travelers {
+  grid-column: 1 / -1;
+}
+
+/* 价格区域 */
+.price-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: linear-gradient(135deg, rgba(75, 110, 88, 0.05), rgba(107, 142, 120, 0.05));
+  border-radius: 12rpx;
+  border: 1rpx solid rgba(75, 110, 88, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-label {
+  font-size: 22rpx;
+  color: var(--text-light);
+  margin-bottom: 4rpx;
+}
+
+.price-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.price-detail {
+  font-size: 20rpx;
+  color: var(--text-lighter);
+  text-align: right;
+}
+
+/* 订单操作 - 重新设计 */
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20rpx 24rpx 24rpx 24rpx;
+  gap: 16rpx;
+  background: rgba(255, 255, 255, 0.3);
+  border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(75, 110, 88, 0.3);
+  transition: all 0.3s ease;
+  min-width: 120rpx;
+}
+
+.btn-primary:active {
+  transform: translateY(-1rpx);
+  box-shadow: 0 6rpx 16rpx rgba(75, 110, 88, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--primary-color);
+  border: 2rpx solid var(--primary-color);
+  border-radius: 25rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 120rpx;
+}
+
+.btn-secondary:active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-light);
+  border: 2rpx solid var(--border-color);
+  border-radius: 25rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 120rpx;
+}
+
+.btn-cancel:active {
+  background: var(--text-light);
+  color: white;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 100rpx 0;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 20rpx;
+  border-radius: 20rpx;
+  backdrop-filter: blur(10rpx);
+  width: calc(100% - 40rpx);
+  box-sizing: border-box;
+}
+
+.empty-image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.7;
+  filter: brightness(0.8);
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+/* 加载更多 */
+.load-more {
+  padding: 40rpx;
+  text-align: center;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.load-more .btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 20rpx 40rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(75, 110, 88, 0.3);
+  transition: all 0.3s ease;
+}
+
+.load-more .btn-primary:active {
+  transform: translateY(-1rpx);
+  box-shadow: 0 6rpx 16rpx rgba(75, 110, 88, 0.4);
+} 
+
+/* 支付状态样式 */
+.order-status.paid {
+  color: #52c41a;
+  background: rgba(82, 196, 26, 0.1);
+}
+
+.order-status.paying {
+  color: #1890ff;
+  background: rgba(24, 144, 255, 0.1);
+}
+
+.order-status.refunded {
+  color: #ff4d4f;
+  background: rgba(255, 77, 79, 0.1);
+}
+
+/* 退款按钮样式 */
+.btn-refund {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 120rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+}
+
+.btn-refund:active {
+  transform: translateY(-1rpx);
+  box-shadow: 0 6rpx 16rpx rgba(255, 107, 107, 0.4);
+}
+
+/* 删除按钮样式 */
+.btn-delete {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 25rpx;
+  padding: 16rpx 32rpx;
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 120rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 77, 79, 0.3);
+}
+
+.btn-delete:active {
+  transform: translateY(-1rpx);
+  box-shadow: 0 6rpx 16rpx rgba(255, 77, 79, 0.4);
+  background: #ff7875;
+} 

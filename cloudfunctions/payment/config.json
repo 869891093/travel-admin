@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "openapi": [
+      "cloudPay.unifiedOrder",
+      "cloudPay.orderQuery", 
+      "cloudPay.refund"
+    ]
+  }
+}
