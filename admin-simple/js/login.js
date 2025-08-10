@@ -54,6 +54,8 @@ class LoginManager {
                     } else {
                         // 登录已过期，清除本地存储
                         localStorage.removeItem('adminInfo');
+                        localStorage.removeItem('adminLoggedIn');
+                        localStorage.removeItem('adminLoginTime');
                     }
                 }
             } catch (error) {
@@ -127,9 +129,13 @@ class LoginManager {
                 };
                 
                 localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
-                
+
+                // 设置登录状态标记（与index.html保持一致）
+                localStorage.setItem('adminLoggedIn', 'true');
+                localStorage.setItem('adminLoginTime', new Date().getTime().toString());
+
                 this.showMessage(`登录成功！欢迎 ${adminInfo.name}`, 'success');
-                
+
                 // 延迟跳转到管理后台
                 setTimeout(() => {
                     window.location.href = 'index.html';

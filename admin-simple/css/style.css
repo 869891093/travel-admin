@@ -2089,6 +2089,27 @@ select:focus {
     background: #5a6268;
 }
 
+/* 退出登录按钮 */
+.btn-logout {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+}
+
+.btn-logout:hover {
+    background: #c82333;
+}
+
+.btn-logout i {
+    margin-right: 5px;
+}
+
 /* 轮播图ID显示样式 */
 .banner-id code {
     background: #f8f9fa;
