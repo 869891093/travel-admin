@@ -109,9 +109,7 @@ class SimpleAPI {
             return result;
         } catch (error) {
             console.error('云函数调用失败:', error);
-            // 如果真实调用失败，回退到模拟数据
-            console.log('回退到模拟数据');
-            return await this.simulateCloudFunction(functionName, data);
+            throw error; // 不再回退到模拟数据，直接抛出错误
         }
     }
 

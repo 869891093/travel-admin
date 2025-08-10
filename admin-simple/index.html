@@ -12,11 +12,18 @@
     <script>
         // 立即检查登录状态
         (function() {
+            console.log('开始检查登录状态...');
+
             const isLoggedIn = localStorage.getItem('adminLoggedIn');
             const loginTime = localStorage.getItem('adminLoginTime');
             const currentTime = new Date().getTime();
 
-            console.log('检查登录状态:', { isLoggedIn, loginTime, currentTime });
+            console.log('登录状态检查:', {
+                isLoggedIn,
+                loginTime,
+                currentTime,
+                timeDiff: loginTime ? (currentTime - parseInt(loginTime)) / (1000 * 60 * 60) : 'N/A'
+            });
 
             // 检查是否已登录且未过期（24小时）
             if (!isLoggedIn || !loginTime || (currentTime - parseInt(loginTime)) > 24 * 60 * 60 * 1000) {
@@ -25,17 +32,20 @@
                 localStorage.removeItem('adminLoginTime');
                 localStorage.removeItem('adminInfo');
 
-                console.log('未登录或登录已过期，跳转到登录页面');
+                console.log('❌ 未登录或登录已过期，立即跳转到登录页面');
+
+                // 显示跳转提示
+                document.body.innerHTML = '<div style="text-align: center; margin-top: 100px; font-family: Arial, sans-serif;"><h2>🔐 正在跳转到登录页面...</h2><p>如果没有自动跳转，请<a href="login.html">点击这里</a></p><script>setTimeout(function(){window.location.href="login.html";}, 1000);</script></div>';
 
                 // 立即跳转到登录页面
-                window.location.replace('login.html');
+                setTimeout(function() {
+                    window.location.href = 'login.html';
+                }, 100);
 
-                // 阻止页面继续加载
-                document.write('<div style="text-align: center; margin-top: 50px; font-family: Arial, sans-serif;"><h2>🔐 正在跳转到登录页面...</h2><p>如果没有自动跳转，请<a href="login.html">点击这里</a></p></div>');
-                throw new Error('Redirecting to login page');
+                return;
             }
 
-            console.log('登录状态有效，继续加载页面');
+            console.log('✅ 登录状态有效，继续加载页面');
         })();
 
         // 检查登录状态函数（供其他地方调用）
