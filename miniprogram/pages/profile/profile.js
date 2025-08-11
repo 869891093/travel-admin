@@ -54,7 +54,8 @@ Page({
         
         this.setData({
           userInfo: userInfo,
-          isLoggedIn: true
+          isLoggedIn: true,
+          phone: userInfo.phone || '' // 设置手机号
         })
         
         // 异步检查管理员权限
@@ -137,7 +138,8 @@ Page({
     this.setData({
       genderIndex: genderIndex,
       regionValue: regionValue,
-      editingNickName: userInfo.nickName || '' // 初始化编辑昵称
+      editingNickName: userInfo.nickName || '', // 初始化编辑昵称
+      phone: userInfo.phone || '' // 确保手机号被正确设置
     })
   },
 
