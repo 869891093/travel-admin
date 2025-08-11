@@ -131,13 +131,24 @@ class LoginManager {
                 localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
 
                 // 设置登录状态标记（与index.html保持一致）
+                const loginTime = new Date().getTime().toString();
                 localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminLoginTime', new Date().getTime().toString());
+                localStorage.setItem('adminLoginTime', loginTime);
+
+                console.log('✅ 登录状态已保存:', {
+                    adminLoggedIn: localStorage.getItem('adminLoggedIn'),
+                    adminLoginTime: localStorage.getItem('adminLoginTime'),
+                    adminInfo: localStorage.getItem('adminInfo')
+                });
 
                 this.showMessage(`登录成功！欢迎 ${adminInfo.name}`, 'success');
 
                 // 延迟跳转到管理后台
                 setTimeout(() => {
+                    console.log('🚀 准备跳转到管理后台，再次检查登录状态:', {
+                        adminLoggedIn: localStorage.getItem('adminLoggedIn'),
+                        adminLoginTime: localStorage.getItem('adminLoginTime')
+                    });
                     window.location.href = 'index.html';
                 }, 1500);
                 
