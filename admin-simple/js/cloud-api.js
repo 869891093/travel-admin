@@ -5,7 +5,8 @@ class CloudAPI {
         this.isConnected = false;
         this.cache = new Map();
         this.cacheTimeout = 5 * 60 * 1000; // 5分钟缓存
-        this.proxyUrl = 'http://localhost:3001'; // 代理服务器地址
+        // 自动检测代理服务器地址
+        this.proxyUrl = this.getProxyUrl();
 
         console.log('CloudAPI 初始化完成 - 真实数据版');
         console.log('环境ID:', this.envId);
@@ -13,6 +14,17 @@ class CloudAPI {
 
         // 测试代理服务器连接
         this.testProxyConnection();
+    }
+
+    // 自动检测代理服务器地址
+    getProxyUrl() {
+        // 如果是本地开发环境
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3001';
+        }
+
+        // 如果是云托管环境，使用当前域名
+        return window.location.origin;
     }
 
     // 测试代理服务器连接
