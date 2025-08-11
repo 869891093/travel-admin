@@ -10,49 +10,23 @@
 <body>
     <!-- 登录验证脚本 -->
     <script>
-        // 立即检查登录状态
+        // 临时跳过登录验证 - 用于调试
         (function() {
-            console.log('开始检查登录状态...');
+            console.log('🚧 临时跳过登录验证，直接进入管理后台');
 
-            const isLoggedIn = localStorage.getItem('adminLoggedIn');
-            const loginTime = localStorage.getItem('adminLoginTime');
-            const currentTime = new Date().getTime();
+            // 设置临时的管理员信息
+            const tempAdminInfo = {
+                name: '临时管理员',
+                role: 'admin',
+                permissions: ['all'],
+                loginTime: new Date().toISOString()
+            };
 
-            console.log('登录状态检查:', {
-                isLoggedIn,
-                loginTime,
-                currentTime,
-                timeDiff: loginTime ? (currentTime - parseInt(loginTime)) / (1000 * 60 * 60) : 'N/A',
-                isLoggedInValid: !!isLoggedIn,
-                isLoginTimeValid: !!loginTime,
-                isTimeNotExpired: loginTime ? (currentTime - parseInt(loginTime)) <= 24 * 60 * 60 * 1000 : false
-            });
+            localStorage.setItem('adminInfo', JSON.stringify(tempAdminInfo));
+            localStorage.setItem('adminLoggedIn', 'true');
+            localStorage.setItem('adminLoginTime', new Date().getTime().toString());
 
-            // 检查是否已登录且未过期（24小时）
-            const isLoginValid = isLoggedIn && loginTime && (currentTime - parseInt(loginTime)) <= 24 * 60 * 60 * 1000;
-
-            console.log('登录有效性:', isLoginValid);
-
-            if (!isLoginValid) {
-                // 清除过期的登录信息
-                localStorage.removeItem('adminLoggedIn');
-                localStorage.removeItem('adminLoginTime');
-                localStorage.removeItem('adminInfo');
-
-                console.log('❌ 未登录或登录已过期，立即跳转到登录页面');
-
-                // 显示跳转提示并立即跳转
-                document.body.innerHTML = '<div style="text-align: center; margin-top: 100px; font-family: Arial, sans-serif;"><h2>🔐 正在跳转到登录页面...</h2><p>如果没有自动跳转，请<a href="login.html">点击这里</a></p></div>';
-
-                // 立即跳转到登录页面
-                setTimeout(function() {
-                    window.location.href = 'login.html';
-                }, 500);
-
-                return;
-            }
-
-            console.log('✅ 登录状态有效，继续加载页面');
+            console.log('✅ 临时登录状态已设置，继续加载页面');
         })();
 
         // 检查登录状态函数（供其他地方调用）

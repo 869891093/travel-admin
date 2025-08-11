@@ -29,26 +29,43 @@ app.use(express.static('.'));
 
 // 云函数代理接口
 app.post('/api/cloud-function', async (req, res) => {
+    const startTime = Date.now();
+
     try {
         const { envId, functionName, data } = req.body;
-        
+
         console.log('=== 代理云函数调用 ===');
+        console.log('时间:', new Date().toISOString());
         console.log('环境ID:', envId);
         console.log('函数名:', functionName);
         console.log('数据:', data);
-        
+
+        // 设置30秒超时
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('云函数调用超时 (30秒)')), 30000);
+        });
+
         // 调用真实的云函数
-        const result = await callRealCloudFunction(envId, functionName, data);
-        console.log('使用真实云函数数据');
-        
+        const result = await Promise.race([
+            callRealCloudFunction(envId, functionName, data),
+            timeoutPromise
+        ]);
+
+        const duration = Date.now() - startTime;
+        console.log(`云函数调用完成，耗时: ${duration}ms`);
         console.log('返回结果:', result);
+
         res.json(result);
-        
+
     } catch (error) {
-        console.error('代理调用失败:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: error.message 
+        const duration = Date.now() - startTime;
+        console.error(`代理调用失败 (耗时: ${duration}ms):`, error.message);
+        console.error('错误堆栈:', error.stack);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            duration: duration
         });
     }
 });
@@ -63,10 +80,30 @@ async function getAccessToken() {
         }
 
         console.log('获取新的access_token...');
+        console.log('微信配置:', {
+            appId: WECHAT_CONFIG.appId,
+            appSecret: WECHAT_CONFIG.appSecret ? '***已设置***' : '未设置',
+            envId: WECHAT_CONFIG.envId
+        });
+
         const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${WECHAT_CONFIG.appId}&secret=${WECHAT_CONFIG.appSecret}`;
 
-        const response = await fetch(url);
+        console.log('请求微信API获取access_token...');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+
+        const response = await fetch(url, {
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error(`HTTP错误: ${response.status} ${response.statusText}`);
+        }
+
         const result = await response.json();
+        console.log('微信API响应:', result);
 
         if (result.errcode) {
             throw new Error(`获取access_token失败: ${result.errmsg}`);
@@ -80,7 +117,11 @@ async function getAccessToken() {
         return result.access_token;
 
     } catch (error) {
-        console.error('获取access_token失败:', error);
+        if (error.name === 'AbortError') {
+            console.error('获取access_token超时');
+            throw new Error('获取access_token超时，请检查网络连接');
+        }
+        console.error('获取access_token失败:', error.message);
         throw error;
     }
 }
