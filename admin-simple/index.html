@@ -22,11 +22,18 @@
                 isLoggedIn,
                 loginTime,
                 currentTime,
-                timeDiff: loginTime ? (currentTime - parseInt(loginTime)) / (1000 * 60 * 60) : 'N/A'
+                timeDiff: loginTime ? (currentTime - parseInt(loginTime)) / (1000 * 60 * 60) : 'N/A',
+                isLoggedInValid: !!isLoggedIn,
+                isLoginTimeValid: !!loginTime,
+                isTimeNotExpired: loginTime ? (currentTime - parseInt(loginTime)) <= 24 * 60 * 60 * 1000 : false
             });
 
             // 检查是否已登录且未过期（24小时）
-            if (!isLoggedIn || !loginTime || (currentTime - parseInt(loginTime)) > 24 * 60 * 60 * 1000) {
+            const isLoginValid = isLoggedIn && loginTime && (currentTime - parseInt(loginTime)) <= 24 * 60 * 60 * 1000;
+
+            console.log('登录有效性:', isLoginValid);
+
+            if (!isLoginValid) {
                 // 清除过期的登录信息
                 localStorage.removeItem('adminLoggedIn');
                 localStorage.removeItem('adminLoginTime');
