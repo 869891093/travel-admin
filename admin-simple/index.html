@@ -34,13 +34,13 @@
 
                 console.log('❌ 未登录或登录已过期，立即跳转到登录页面');
 
-                // 显示跳转提示
-                document.body.innerHTML = '<div style="text-align: center; margin-top: 100px; font-family: Arial, sans-serif;"><h2>🔐 正在跳转到登录页面...</h2><p>如果没有自动跳转，请<a href="login.html">点击这里</a></p><script>setTimeout(function(){window.location.href="login.html";}, 1000);</script></div>';
+                // 显示跳转提示并立即跳转
+                document.body.innerHTML = '<div style="text-align: center; margin-top: 100px; font-family: Arial, sans-serif;"><h2>🔐 正在跳转到登录页面...</h2><p>如果没有自动跳转，请<a href="login.html">点击这里</a></p></div>';
 
                 // 立即跳转到登录页面
                 setTimeout(function() {
                     window.location.href = 'login.html';
-                }, 100);
+                }, 500);
 
                 return;
             }
