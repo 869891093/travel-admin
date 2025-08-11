@@ -146,6 +146,105 @@
                     switchMethod(method);
                 });
             });
+
+            // 检查URL参数并自动填充表单
+            checkURLParams();
+        }
+
+        function checkURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const openid = urlParams.get('openid');
+            const adminKey = urlParams.get('adminKey');
+
+            console.log('检查URL参数:', { openid, adminKey });
+
+            if (openid) {
+                // 填充表单
+                const openidInput = document.getElementById('openid');
+                const adminKeyInput = document.getElementById('adminKey');
+
+                if (openidInput) {
+                    openidInput.value = openid;
+                    console.log('已填充OpenID:', openid);
+                }
+
+                if (adminKeyInput && adminKey) {
+                    adminKeyInput.value = adminKey;
+                    console.log('已填充管理密钥');
+                }
+
+                // 自动提交登录
+                console.log('检测到URL参数，自动进行登录...');
+                setTimeout(() => {
+                    handleLoginWithParams(openid, adminKey || '');
+                }, 500);
+            }
+        }
+
+        async function handleLoginWithParams(openid, adminKey) {
+            console.log('使用URL参数自动登录:', { openid, adminKey: adminKey ? '***' : '空' });
+
+            if (!openid || openid.trim() === '') {
+                showMessage('请输入有效的OpenID', 'error');
+                return;
+            }
+
+            showLoading('验证管理员权限...');
+
+            try {
+                console.log('调用云函数验证权限');
+
+                const result = await api.callCloudFunction('httpAPI', {
+                    action: 'checkWebAdmin',
+                    openid: openid.trim(),
+                    adminKey: adminKey.trim()
+                });
+
+                console.log('验证结果:', result);
+
+                if (result.success && result.isAdmin) {
+                    const adminInfo = {
+                        openid: openid,
+                        name: result.adminInfo?.name || '管理员',
+                        role: result.adminInfo?.role || 'admin',
+                        permissions: result.adminInfo?.permissions || [],
+                        isSuperAdmin: result.adminInfo?.role === 'super_admin',
+                        loginTime: new Date().toISOString()
+                    };
+
+                    // 保存管理员信息
+                    localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+
+                    // 设置登录状态标记（与index.html保持一致）
+                    const loginTime = new Date().getTime().toString();
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminLoginTime', loginTime);
+
+                    console.log('✅ 登录状态已保存:', {
+                        adminLoggedIn: localStorage.getItem('adminLoggedIn'),
+                        adminLoginTime: localStorage.getItem('adminLoginTime'),
+                        adminInfo: localStorage.getItem('adminInfo')
+                    });
+
+                    showMessage(`登录成功！欢迎 ${adminInfo.name}`, 'success');
+
+                    setTimeout(() => {
+                        console.log('🚀 准备跳转到管理后台，再次检查登录状态:', {
+                            adminLoggedIn: localStorage.getItem('adminLoggedIn'),
+                            adminLoginTime: localStorage.getItem('adminLoginTime')
+                        });
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showMessage(result.message || '权限验证失败，请确认您是否为管理员', 'error');
+                }
+
+            } catch (error) {
+                console.error('自动登录失败:', error);
+                showMessage('登录失败: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
         }
 
         function switchMethod(method) {
