@@ -148,6 +148,9 @@ class SimpleAPI {
 
             console.log('通过代理服务器调用:', url);
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -157,11 +160,18 @@ class SimpleAPI {
                     envId: this.envId,
                     functionName: functionName,
                     data: data
-                })
+                }),
+                signal: controller.signal
             });
 
+            clearTimeout(timeoutId);
+
+            console.log('收到响应，状态:', response.status, response.statusText);
+
             if (!response.ok) {
-                throw new Error(`HTTP调用失败: ${response.status}`);
+                const errorText = await response.text();
+                console.error('HTTP错误响应:', errorText);
+                throw new Error(`HTTP调用失败: ${response.status}, message: ${errorText}`);
             }
 
             const result = await response.json();
@@ -170,8 +180,18 @@ class SimpleAPI {
             return result;
         } catch (error) {
             console.error('代理服务器调用失败:', error);
-            // 如果代理服务器不可用，回退到模拟数据
-            console.log('代理服务器不可用，使用模拟数据');
+
+            if (error.name === 'AbortError') {
+                console.error('请求超时 (30秒)');
+                throw new Error('请求超时，请检查网络连接');
+            }
+
+            console.error('详细错误信息:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
+
             throw error;
         }
     }
